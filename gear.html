@@ -18,6 +18,8 @@
     --focus: #7fb5ff;
     --radius: 14px;
     --shadow: 0 10px 30px rgba(0,0,0,.35);
+
+    /* Dropdown spacings */
     --menu-gap: 10px;
     --menu-pad-y: 8px;
     --menu-pad-x: 12px;
@@ -46,31 +48,48 @@
   header .bar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0;}
   .brand{font-weight:800; letter-spacing:.5px; font-size: clamp(18px, 3vw, 22px); color: var(--text)}
   .tag{color: var(--muted); font-weight:500}
-  /* nav.menus rules replaced by Dropdown UX Patch */
-  nav.menus /* details base rules replaced by Dropdown UX Patch */
-  /* summary rules replaced by Dropdown UX Patch */
-  nav.menus /* open state rules replaced by Dropdown UX Patch */
-  nav.menus /* dropdown panel rules replaced by Dropdown UX Patch */
+
+  /* ===== Dropdown UX Patch ===== */
+  nav.menus{ display:flex; gap:var(--menu-gap); flex-wrap:wrap; }
+  nav.menus details{
+    position:relative; display:inline-block; margin:0;
+    border:1px solid var(--border); border-radius:var(--menu-radius); background:var(--surface);
+    padding:0; isolation:isolate;
+  }
+  nav.menus details > summary{
+    list-style:none; cursor:pointer; outline:none; color:var(--text);
+    padding:var(--menu-pad-y) var(--menu-pad-x); line-height:1.2;
+    display:flex; align-items:center; gap:6px; border-radius:var(--menu-radius);
+  }
+  nav.menus details[open] > summary,
+  nav.menus details:hover > summary{
+    background:var(--primary-10);
+    border-bottom-left-radius:0; border-bottom-right-radius:0;
+    border-bottom:1px dashed var(--border);
+  }
+  nav.menus details ul{
+    position:absolute; left:0; top:calc(100% - 1px);
+    margin:0; padding:4px 0; list-style:none; background:var(--surface);
+    border:1px solid var(--border); border-top:0;
+    border-bottom-left-radius:var(--menu-radius); border-bottom-right-radius:var(--menu-radius);
+    box-shadow:0 10px 24px rgba(0,0,0,.45);
+    min-width:210px; width:max-content; z-index:100;
+    opacity:0; pointer-events:none; transform:translateY(-4px);
+    transition:opacity .16s ease, transform .16s ease;
+  }
   nav.menus details:hover ul,
-  nav.menus details:focus-within ul{
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-  }
-  nav.menus details ul li + li{
-    border-top: 1px dashed var(--border);
-  }
+  nav.menus details:focus-within ul{ opacity:1; pointer-events:auto; transform:translateY(0); }
+  nav.menus details ul li + li{ border-top:1px dashed var(--border); }
   nav.menus details ul a{
-    display: block;
-    padding: var(--menu-item-pad-y) var(--menu-item-pad-x);
-    white-space: nowrap;
-    text-decoration: none;
-    color: var(--text);
+    display:block; padding:var(--menu-item-pad-y) var(--menu-item-pad-x);
+    white-space:nowrap; text-decoration:none; color:var(--text);
   }
-  nav.menus details ul a:hover{
-    background: color-mix(in oklab, var(--primary) 12%, transparent);
-    border-radius: 8px;
+  nav.menus details ul a:hover{ background: color-mix(in oklab, var(--primary) 12%, transparent); border-radius:8px; }
+
+  @media (max-width: 520px){
+    nav.menus details ul{ left:0; right:auto; min-width:60vw; }
   }
+
   a{color: var(--primary); text-decoration: none}
   a:hover{text-decoration: underline}
   a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible{
@@ -91,242 +110,33 @@
   ul{line-height:1.7}
   .badge{display:inline-block; padding:2px 8px; border-radius:999px; background: var(--primary-10); color: var(--primary); border:1px solid color-mix(in oklab, var(--primary) 35%, #000 65%)}
   footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; padding:18px 0; margin-top:32px}
-  @media (prefers-reduced-motion: reduce){ *{animation: none !important; transition: none !important} }
-  @media (max-width: 780px){ }
-  @media (max-width: 520px){
-    nav.menus /* dropdown panel rules replaced by Dropdown UX Patch */
+
+  /* Prevent sticky header from covering anchors */
+  h1[id], h2[id], h3[id], h4[id], h5[id]{ scroll-margin-top: 90px; }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation: none !important; transition: none !important}
   }
-  
-
-
-/* ===== Dropdown UX Patch ===== */
-:root{
-  --menu-gap: 10px;
-  --menu-pad-y: 8px;
-  --menu-pad-x: 12px;
-  --menu-item-pad-y: 8px;
-  --menu-item-pad-x: 12px;
-  --menu-radius: 10px;
-}
-
-nav.menus{
-  display: flex;
-  gap: var(--menu-gap);
-  flex-wrap: wrap;
-}
-
-/* Menu trigger block */
-nav.menus details{
-  position: relative;
-  display: inline-block;
-  margin: 0;
-  border: 1px solid var(--border);
-  border-radius: var(--menu-radius);
-  background: var(--surface);
-  padding: 0;
-  isolation: isolate;
-}
-
-/* Trigger (Summary) */
-nav.menus details > summary{
-  list-style: none;
-  cursor: pointer;
-  outline: none;
-  color: var(--text);
-  padding: var(--menu-pad-y) var(--menu-pad-x);
-  line-height: 1.2;
-  display: flex; align-items: center; gap: 6px;
-  border-radius: var(--menu-radius);
-}
-
-nav.menus details[open] > summary,
-nav.menus details:hover > summary{
-  background: var(--primary-10);
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-  border-bottom: 1px dashed var(--border);
-}
-
-/* Dropdown panel */
-nav.menus details ul{
-  position: absolute;
-  left: 0;
-  top: calc(100% - 1px);
-  margin: 0;
-  padding: 4px 0;
-  list-style: none;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-top: 0;
-  border-bottom-left-radius: var(--menu-radius);
-  border-bottom-right-radius: var(--menu-radius);
-  box-shadow: 0 10px 24px rgba(0,0,0,.45);
-  min-width: 210px;
-  width: max-content;
-  z-index: 100;
-  opacity: 0;
-  pointer-events: none;
-  transform: translateY(-4px);
-  transition: opacity .16s ease, transform .16s ease;
-}
-
-/* Show rules: hover or focus within */
-nav.menus details:hover ul,
-nav.menus details:focus-within ul{
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-
-/* Menu items */
-nav.menus details ul li + li{
-  border-top: 1px dashed var(--border);
-}
-nav.menus details ul a{
-  display: block;
-  padding: var(--menu-item-pad-y) var(--menu-item-pad-x);
-  white-space: nowrap;
-  text-decoration: none;
-  color: var(--text);
-}
-nav.menus details ul a:hover{
-  background: color-mix(in oklab, var(--primary) 12%, transparent);
-  border-radius: 8px;
-}
-
-/* Keep dropdowns inside viewport on narrow screens */
-@media (max-width: 520px){
-  nav.menus details ul{ left: 0; right: auto; min-width: 60vw; }
-}
-
-
-</style>
-<style>
-:root{
-  --bg: #30363d;
-  --surface: #24292f;
-  --text: #e6edf3;
-  --muted: #9aa4b2;
-  --primary: #a5d6ff;
-  --primary-10: rgba(165,214,255,.12);
-  --accent: #ffcc8a;
-  --border: #3a4149;
-  --focus: #7fb5ff;
-  --radius: 14px;
-  --shadow: 0 10px 30px rgba(0,0,0,.35);
-}
-
-@media (prefers-reduced-motion: no-preference){
-  :root{ scroll-behavior: smooth; }
-}
-
-html,body{height:100%}
-body{
-  margin:0;
-  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
-  color: var(--text);
-  background: var(--bg);
-  line-height: 1.55;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-.wrap{max-width: 1000px; margin: 0 auto; padding: 32px 16px;}
-
-header{
-  position: sticky; top:0; z-index:20;
-  backdrop-filter: blur(6px);
-  background: color-mix(in oklab, var(--surface) 85%, #000 15% / 85%);
-  border-bottom: 1px solid var(--border);
-}
-header .bar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0;}
-.brand{font-weight:800; letter-spacing:.5px; font-size: clamp(18px, 3vw, 22px); color: var(--text)}
-.tag{color: var(--muted); font-weight:500}
-
-nav .menus{display:flex; gap:10px; flex-wrap:wrap}
-details{
-  position:relative; display:inline-block;
-  border:1px solid var(--border); border-radius:10px; background: var(--surface);
-  padding:6px 10px;
-}
-details > summary{list-style:none; cursor:pointer; outline:none; color: var(--text)}
-details[open] > summary{border-bottom:1px dashed var(--border)}
-details ul{
-  position:absolute; left:0; top: calc(100% + 2px);
-  margin:0; padding:4px; list-style:none;
-  background: var(--surface);
-  border:1px solid var(--border); border-radius:10px;
-  box-shadow: 0 10px 24px rgba(0,0,0,.45);
-  width: max-content;
-  min-width: 180px;
-  z-index: 50;
-}
-details ul li{margin:0; padding:0}
-details ul li a{display:block; padding:6px 10px; text-decoration:none; white-space: nowrap;}
-details ul li a:hover{background: color-mix(in oklab, var(--primary) 12%, transparent); border-radius:8px; text-decoration:none}
-
-a{color: var(--primary); text-decoration: none}
-a:hover{text-decoration: underline}
-a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible{
-  outline: 2px solid var(--focus);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
-
-.paper{
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 28px;
-}
-
-.infobox{
-  float:right; width:min(280px, 40%); margin: 0 0 16px 24px;
-  background: color-mix(in oklab, var(--surface) 85%, #000 15%);
-  border:1px solid var(--border); border-radius:12px; padding:12px 14px;
-  font-size: 14px; color: var(--text);
-}
-.infobox h3{margin:.2rem 0 .4rem 0; font-size:16px; color: var(--accent)}
-.infobox table{width:100%; border-collapse: collapse}
-.infobox td{padding:6px 8px; border-bottom:1px dashed var(--border)}
-.infobox td:first-child{color: var(--muted); white-space: nowrap; padding-right:12px;}
-
-h1{margin: 0 0 8px 0; font-size: clamp(26px, 4vw, 34px)}
-h2{margin-top: 26px; font-size: 20px; border-bottom: 1px solid var(--border); padding-bottom:6px; color: var(--accent)}
-p{line-height:1.7}
-ul{line-height:1.7}
-
-.badge{display:inline-block; padding:2px 8px; border-radius:999px; background: var(--primary-10); color: var(--primary); border:1px solid color-mix(in oklab, var(--primary) 35%, #000 65%)}
-
-footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; padding:18px 0; margin-top:32px}
-
-@media (prefers-reduced-motion: reduce){
-  *{animation: none !important; transition: none !important}
-}
-
-@media (max-width: 780px){
-  .infobox{float:none; width:100%; margin: 0 0 16px 0}
-}
-
-</style>
+  </style>
 </head>
 <body>
   <header>
-    <div class="wrap bar" style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+    <div class="wrap bar">
       <div>
         <div class="brand">Kubernix</div>
         <div class="tag">DevOps Journey · Homelab · Cloud</div>
       </div>
-      <nav class="menus menus">
+
+      <!-- Dropdown now links to in-page sections -->
+      <nav class="menus">
         <details>
           <summary>Gear</summary>
           <ul>
-            <li><a href="gear.html">Desktop PC</a></li>
-            <li><a href="homelabpcs.html">Homelab PCs</a></li>
-            <li><a href="raspberrypi.html">Raspberry Pi</a></li>
-            <li><a href="#">Switch</a></li>
-            <li><a href="#">Router</a></li>
+            <li><a href="#daily-desktop-gaming-workstation">Desktop PC</a></li>
+            <li><a href="#compute">Homelab PCs</a></li>
+            <li><a href="#services">Raspberry Pi</a></li>
+            <li><a href="#network">Switch</a></li>
+            <li><a href="#network">Router</a></li>
           </ul>
         </details>
         <details>
@@ -344,15 +154,15 @@ footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; 
           </ul>
         </details>
       </nav>
-      </nav>
     </div>
   </header>
 
   <main class="wrap">
     <section class="paper">
-      <h1>Gear Overview</h1>
+      <h1 id="gear-overview">Gear Overview</h1>
       <p class="muted">A professional summary of all homelab and desktop equipment, network, and services in use.</p>
-      <h2>Summary</h2>
+
+      <h2 id="summary">Summary</h2>
       <ul>
         <li><strong>Last updated:</strong> 2025-08-26</li>
         <li><strong>Scope:</strong> End-to-end inventory: network, compute, desktop, services</li>
@@ -363,20 +173,23 @@ footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; 
         <li><strong>Contact:</strong> <a href="https://github.com/milinko92/kubernix.github.io/tree/main" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
       <hr>
-      <h2>Network</h2>
+
+      <h2 id="network">Network</h2>
       <ul>
         <li><strong>Gateway / Router (ISP):</strong> Internet edge, NAT, default gateway (managed by ISP)</li>
         <li><strong>Switch — Netgear GS724T v3:</strong> 24× Gigabit Smart Managed (802.1Q VLANs), VLANs: 10/20/30/40/50/60, Trunks: Ports 1–2 to router/firewall, Admin: Desktop on port 3 (tagged access)</li>
         <li><strong>Docs:</strong> <a href="README.md">VLAN Membership & PVID Plan</a>, <a href="vlan_membership.csv">Membership CSV</a>, <a href="pvid_table.csv">PVID CSV</a></li>
       </ul>
       <hr>
-      <h2>Compute</h2>
+
+      <h3 id="compute">Compute</h3>
       <ul>
         <li><strong>HP EliteDesk 800 G2 DM:</strong> i5-6600T, 8GB RAM, 224GB SSD, Intel HD Graphics</li>
         <li><strong>Dell D13S:</strong> i3-8100T, 8GB RAM, 224GB SSD, Intel HD Graphics</li>
       </ul>
       <hr>
-      <h2>Daily Desktop (Gaming / Workstation)</h2>
+
+      <h4 id="daily-desktop-gaming-workstation">Daily Desktop (Gaming / Workstation)</h4>
       <ul>
         <li><strong>CPU:</strong> i5-13600K (14-Core, up to 5.10GHz)</li>
         <li><strong>Motherboard:</strong> ASUS TUF Gaming Z790-Pro WiFi (DDR5)</li>
@@ -388,7 +201,8 @@ footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; 
         <li><strong>Storage:</strong> 1TB + 2TB Samsung 990 PRO NVMe</li>
       </ul>
       <hr>
-      <h2>Services</h2>
+
+      <h5 id="services">Services</h5>
       <ul>
         <li><strong>Raspberry Pi (DNS + VPN):</strong> VLAN 10 (untagged) + tagged access to 20/30/40/50/60, Services: Pi-hole + Unbound DNS, VPN gateway</li>
       </ul>
@@ -397,29 +211,32 @@ footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; 
 
   <button id="toTop" aria-label="Back to top">↑ Top</button>
 
-  
+  <script>
+  (function(){
+    const menus = document.querySelector('nav.menus');
+    if (!menus) return;
+    const items = Array.from(menus.querySelectorAll('details'));
+    function closeAll(except){
+      items.forEach(d => { if (d !== except) d.removeAttribute('open'); });
+    }
+    items.forEach(d => {
+      d.addEventListener('mouseenter', () => { d.setAttribute('open',''); closeAll(d); });
+      d.addEventListener('mouseleave', () => { d.removeAttribute('open'); });
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('nav.menus')) closeAll();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAll();
+    });
 
-
-
-<script>
-(function(){
-  const menus = document.querySelector('nav.menus');
-  if (!menus) return;
-  const items = Array.from(menus.querySelectorAll('details'));
-  function closeAll(except){
-    items.forEach(d => { if (d !== except) d.removeAttribute('open'); });
-  }
-  items.forEach(d => {
-    d.addEventListener('mouseenter', () => { d.setAttribute('open',''); closeAll(d); });
-    d.addEventListener('mouseleave', () => { d.removeAttribute('open'); });
-  });
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('nav.menus')) closeAll();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') closeAll();
-  });
-})();
-</script>
+    // close dropdown after clicking an in-page anchor link
+    menus.addEventListener('click', (e) => {
+      const a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      menus.querySelectorAll('details[open]').forEach(d => d.removeAttribute('open'));
+    });
+  })();
+  </script>
 </body>
 </html>
