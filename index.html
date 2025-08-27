@@ -541,7 +541,19 @@ footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; 
 @media (max-width: 780px){
   .infobox{float:none; width:100%; margin: 0 0 16px 0}
 }
+  /* prevent sticky header from covering anchors */
+  h1[id], h2[id], h3[id]{ scroll-margin-top: 90px; }
 
+  /* Back-to-top button */
+  #toTop{
+    position: fixed; right: 24px; bottom: 24px;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: .55rem .9rem; line-height:1; cursor: pointer;
+    box-shadow: var(--shadow);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
+  }
+  #toTop.show{ opacity: 1; pointer-events: auto; }
 </style>
 </head>
 <body>
