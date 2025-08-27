@@ -1,259 +1,208 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Homelab Landing Page</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Kubernix</title>
+	<meta name="description" content="Journey to DevOps is a learning and project hub documenting a practical path into DevOps: Linux, networking, cloud, homelab, and automation." />
 	<style>
-		   :root {
-			   --color1: #3B3B3B;
-			   --color2: #4A4A4A;
-			   --color3: #616161;
-			   --color4: #757575;
-			   --color5: #B2B2B2;
-			   --accent: #00FFF7;
-		   }
-		   html, body {
-			   height: 100%;
-			   margin: 0;
-			   padding: 0;
-			   background: linear-gradient(135deg, #232526 0%, #3B3B3B 100%);
-			   min-height: 100vh;
-			   font-family: 'Fira Mono', 'Consolas', 'Menlo', 'Monaco', monospace;
-			   box-sizing: border-box;
-		   }
-		body {
-			min-height: 100vh;
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			justify-content: flex-start;
-		}
-		   header {
-			   width: 100%;
-			   background: var(--color1);
-			   color: var(--color5);
-			   padding: 2rem 0 1rem 0;
-			   text-align: center;
-			   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-			   letter-spacing: 0.1em;
-			   border-bottom: 2px solid var(--accent);
-		   }
-		   nav {
-			   width: 100%;
-			   background: var(--color2);
-			   display: flex;
-			   justify-content: center;
-			   box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-			   z-index: 10;
-			   border-bottom: 1px solid var(--accent);
-		   }
-		   .navbar {
-			   display: flex;
-			   gap: 2rem;
-			   list-style: none;
-			   margin: 0;
-			   padding: 0;
-			   font-size: 1.1rem;
-			   font-family: inherit;
-		   }
-		.navbar > li {
-			position: relative;
-		}
-		   .navbar > li > button {
-			   background: var(--color3);
-			   color: var(--color5);
-			   border: none;
-			   padding: 1rem 2rem;
-			   font-size: 1.1rem;
-			   border-radius: 0.5rem 0.5rem 0 0;
-			   cursor: pointer;
-			   transition: background 0.2s, color 0.2s, box-shadow 0.2s;
-			   outline: none;
-			   width: 100%;
-			   font-family: inherit;
-			   box-shadow: 0 2px 8px rgba(0,255,247,0.05);
-			   border-bottom: 2px solid transparent;
-			   letter-spacing: 0.05em;
-		   }
-		   .navbar > li > button:hover, .navbar > li > button:focus {
-			   background: var(--color4);
-			   color: var(--accent);
-			   border-bottom: 2px solid var(--accent);
-			   box-shadow: 0 4px 16px rgba(0,255,247,0.10);
-		   }
-		   .dropdown {
-			   display: none;
-			   position: absolute;
-			   left: 0;
-			   top: 100%;
-			   background: var(--color2);
-			   min-width: 220px;
-			   box-shadow: 0 4px 16px rgba(0,255,247,0.10);
-			   border-radius: 0 0 0.5rem 0.5rem;
-			   z-index: 100;
-			   padding: 0.5rem 0;
-			   animation: fadeIn 0.2s;
-			   border-top: 2px solid var(--accent);
-		   }
-		.dropdown li {
-			list-style: none;
-		}
-		   .dropdown li a {
-			   display: block;
-			   color: var(--color5);
-			   text-decoration: none;
-			   padding: 0.75rem 1.5rem;
-			   font-size: 1rem;
-			   transition: background 0.2s, color 0.2s;
-			   border-radius: 0.25rem;
-			   font-family: inherit;
-		   }
-		   .dropdown li a:hover, .dropdown li a:focus {
-			   background: var(--accent);
-			   color: var(--color2);
-		   }
-		/* Remove default hover/focus open, handle with JS for better control */
-		@keyframes fadeIn {
-			from { opacity: 0; }
-			to { opacity: 1; }
-		}
-		   main {
-			   width: 100%;
-			   max-width: 900px;
-			   background: rgba(59,59,59,0.97);
-			   margin: 2rem auto 0 auto;
-			   padding: 2rem;
-			   border-radius: 1rem;
-			   box-shadow: 0 2px 8px rgba(0,255,247,0.07);
-		   }
-		   .readme {
-			   color: var(--accent);
-			   font-size: 1.1rem;
-			   line-height: 1.7;
-			   margin-bottom: 2rem;
-			   font-family: inherit;
-		   }
-		   @media (max-width: 700px) {
-			   .navbar {
-				   flex-direction: column;
-				   gap: 0.5rem;
-				   align-items: stretch;
-			   }
-			   .navbar > li > button {
-				   width: 100%;
-				   padding: 1rem;
-			   }
-			   .dropdown {
-				   min-width: 100%;
-				   left: 0;
-				   right: 0;
-			   }
-			   main {
-				   padding: 1rem;
-			   }
-		   }
+	:root {
+		--bg: #30363d;
+		--surface: #24292f;
+		--text: #e6edf3;
+		--muted: #9aa4b2;
+		--primary: #a5d6ff;
+		--primary-10: rgba(165,214,255,.12);
+		--accent: #ffcc8a;
+		--border: #3a4149;
+		--focus: #7fb5ff;
+		--radius: 14px;
+		--shadow: 0 10px 30px rgba(0,0,0,.35);
+	}
+	@media (prefers-reduced-motion: no-preference){ :root{ scroll-behavior: smooth; } }
+	html,body{height:100%}
+	body{
+		margin:0;
+		font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+		color: var(--text);
+		background: var(--bg);
+		line-height: 1.55;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	.wrap{max-width: 1000px; margin: 0 auto; padding: 32px 16px;}
+	header{
+		position: sticky; top:0; z-index:20;
+		backdrop-filter: blur(6px);
+		background: color-mix(in oklab, var(--surface) 85%, #000 15% / 85%);
+		border-bottom: 1px solid var(--border);
+	}
+	header .bar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0;}
+	.brand{font-weight:800; letter-spacing:.5px; font-size: clamp(18px, 3vw, 22px); color: var(--text)}
+	.tag{color: var(--muted); font-weight:500}
+	nav .menus{display:flex; gap:10px; flex-wrap:wrap}
+	details{
+		position:relative; display:inline-block;
+		border:1px solid var(--border); border-radius:10px; background: var(--surface);
+		padding:6px 10px;
+		margin-right: 8px;
+	}
+	details > summary{list-style:none; cursor:pointer; outline:none; color: var(--text);}
+	details[open] > summary,
+	details:hover > summary {
+		border-bottom:1px dashed var(--border);
+		background: var(--primary-10);
+		border-radius: 10px 10px 0 0;
+	}
+	details ul{
+		position:absolute; left:0; top: calc(100% + 2px);
+		margin:0; padding:8px 0; list-style:none;
+		background: var(--surface);
+		border:1px solid var(--border); border-radius:10px;
+		box-shadow: 0 10px 24px rgba(0,0,0,.45);
+		width: max-content;
+		min-width: 200px;
+		z-index: 50;
+		pointer-events: auto;
+		opacity: 1;
+		font-size: 1.05em;
+		transition: opacity 0.18s cubic-bezier(.4,0,.2,1);
+		letter-spacing: 0.01em;
+	}
+	details:not([open]):not(:hover) ul {
+		pointer-events: none;
+		opacity: 0;
+		transition: opacity 0.18s cubic-bezier(.4,0,.2,1);
+	}
+	details[open]:hover ul,
+	details[open]:focus-within ul,
+	details:hover ul,
+	details:focus-within ul {
+		pointer-events: auto;
+		opacity: 1;
+		transition: opacity 0.18s cubic-bezier(.4,0,.2,1);
+	}
+	details ul li{margin:0; padding:0}
+	details ul li a{display:block; padding:6px 10px; text-decoration:none; white-space: nowrap;}
+	details ul li a:hover{background: color-mix(in oklab, var(--primary) 12%, transparent); border-radius:8px; text-decoration:none}
+	a{color: var(--primary); text-decoration: none}
+	a:hover{text-decoration: underline}
+	a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible{
+		outline: 2px solid var(--focus);
+		outline-offset: 2px;
+		border-radius: 6px;
+	}
+	.paper{
+		background: var(--surface);
+		border: 1px solid var(--border);
+		border-radius: var(--radius);
+		box-shadow: var(--shadow);
+		padding: 28px;
+	}
+	.infobox{
+		float:right; width:min(280px, 40%); margin: 0 0 16px 24px;
+		background: color-mix(in oklab, var(--surface) 85%, #000 15%);
+		border:1px solid var(--border); border-radius:12px; padding:12px 14px;
+		font-size: 14px; color: var(--text);
+	}
+	.infobox h3{margin:.2rem 0 .4rem 0; font-size:16px; color: var(--accent)}
+	.infobox table{width:100%; border-collapse: collapse}
+	.infobox td{padding:6px 8px; border-bottom:1px dashed var(--border)}
+	.infobox td:first-child{color: var(--muted); white-space: nowrap; padding-right:12px;}
+	h1{margin: 0 0 8px 0; font-size: clamp(26px, 4vw, 34px)}
+	h2{margin-top: 26px; font-size: 20px; border-bottom: 1px solid var(--border); padding-bottom:6px; color: var(--accent)}
+	p{line-height:1.7}
+	ul{line-height:1.7}
+	.badge{display:inline-block; padding:2px 8px; border-radius:999px; background: var(--primary-10); color: var(--primary); border:1px solid color-mix(in oklab, var(--primary) 35%, #000 65%)}
+	footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; padding:18px 0; margin-top:32px}
+	@media (prefers-reduced-motion: reduce){ *{animation: none !important; transition: none !important} }
+	@media (max-width: 780px){ .infobox{float:none; width:100%; margin: 0 0 16px 0} }
 	</style>
+</head>
 </head>
 <body>
 	<header>
-		<h1>Homelab</h1>
-		<p>Welcome to my Homelab GitHub site!</p>
+		<div class="wrap bar">
+			<div>
+				<div class="brand">Journey to DevOps · Kubernix</div>
+				<div class="tag">Learning, Homelab, Cloud, Automation</div>
+			</div>
+			<nav class="menus">
+				<details>
+					<summary>Gear</summary>
+					<ul>
+						<li><a href="gear.html">Desktop PC</a></li>
+						<li><a href="homelabpcs.html">Homelab PCs</a></li>
+						<li><a href="raspberrypi.html">Raspberry Pi</a></li>
+						<li><a href="#">Switch</a></li>
+						<li><a href="#">Router</a></li>
+					</ul>
+				</details>
+				<details>
+					<summary>Projects</summary>
+					<ul>
+						<li><a href="pihole.html">Pi-hole with Unbound</a></li>
+						<li><a href="proxmox.html">Proxmox</a></li>
+					</ul>
+				</details>
+				<details>
+					<summary>Resources</summary>
+					<ul>
+						<li><a href="https://github.com/milinko92/kubernix.github.io/tree/main" target="_blank" rel="noopener">GitHub Page</a></li>
+						   <li><a href="https://blog.kubernix.com" target="_blank" rel="noopener">Personal Blog</a></li>
+					</ul>
+				</details>
+			</nav>
+		</div>
 	</header>
-	<nav>
-		<ul class="navbar">
-			<li tabindex="0">
-				<button type="button" aria-haspopup="true" aria-expanded="false">Gear</button>
-				<ul class="dropdown" aria-label="Gear submenu">
-					<li><a href="#">Desktop PC</a></li>
-					<li><a href="#">Homelab PCs</a></li>
-					<li><a href="#">Raspberry Pi</a></li>
-					<li><a href="#">Switch</a></li>
-					<li><a href="#">Router</a></li>
-				</ul>
-			</li>
-			<li tabindex="0">
-				<button type="button" aria-haspopup="true" aria-expanded="false">Projects</button>
-				<ul class="dropdown" aria-label="Projects submenu">
-					<li><a href="#">Pi-hole with Unbound</a></li>
-					<li><a href="#">Proxmox</a></li>
-				</ul>
-			</li>
-			<li tabindex="0">
-				<button type="button" aria-haspopup="true" aria-expanded="false">Resources</button>
-				<ul class="dropdown" aria-label="Resources submenu">
-					<li><a href="#">GitHub Page</a></li>
-					<li><a href="#">Personal Blog</a></li>
-				</ul>
-			</li>
-		</ul>
-	</nav>
-	<main>
-		<section class="readme">
-			<h2>README</h2>
-			<p>This is the landing page for my Homelab. Here you can find information about my hardware, projects, and useful resources. Use the navigation above to explore more!</p>
+	<main class="wrap">
+		<section class="paper">
+			<h1>Journey to DevOps · Kubernix</h1>
+			<p><strong>Journey to DevOps</strong> is a personal learning path and open lab by <strong>Kubernix</strong>.<br>
+			It documents the journey into DevOps through Linux, networking, cloud, security, automation, and homelab projects.</p>
+			<hr>
+			<!-- Website | Blog links removed as requested -->
+			<!-- <p><a href="https://kubernix.com">Website</a> | <a href="https://blog.kubernix.com">Blog</a></p> -->
+
+			<h2>📖 Background</h2>
+			<p>This repo is not just a dump of code but also a journey log: configs, experiments, and lessons learnt along the way.<br>
+			It is also a personal knowledge base and a public guide for others taking the same journey.</p>
+			<hr>
+			<h2>🎯 Objectives</h2>
+			<ul>
+				<li>Master Linux, networking, and security fundamentals.</li>
+				<li>Set up a homelab for safe practice and experimentation.</li>
+				<li>Practice AWS Cloud Practitioner, then proceed to automation & scripting.</li>
+				<li>Deep dive into Docker, Kubernetes, Terraform, Ansible, and CI/CD.</li>
+				<li>Share progress publicly through blog and GitHub.</li>
+			</ul>
+			<hr>
+			<h2>🗂️ Projects</h2>
+			<ul>
+				<li>🛡️ <a href="raspberrypi.html">Pi-hole + Unbound DNS</a></li>
+				<li>🖥️ Proxmox + Arch Linux VM</li>
+				<li>⚙️ Bash / PowerShell Automation</li>
+				<li>☁️ AWS Foundations</li>
+			</ul>
+			<hr>
+			<h2>📅 Roadmap</h2>
+			<ul>
+				<li><strong>Phase 1</strong> → LPIC-1, AWS Cloud Practitioner, homelab basics</li>
+				<li><strong>Phase 2</strong> → Network+/Security+, automation & monitoring</li>
+				<li><strong>Phase 3</strong> → Containers (Docker, Kubernetes), Terraform/Ansible, CI/CD pipelines</li>
+			</ul>
+			<hr>
+			<h2>🌐 Links</h2>
+			<ul>
+				<li><a href="https://kubernix.com">GitHub Pages</a></li>
+				<li><a href="https://blog.kubernix.com">Blog</a></li>
+			</ul>
+			<hr>
+			
 		</section>
 	</main>
-	<script>
-		   // Dropdown logic: only one open at a time, close on outside click, no overlap
-		   (function() {
-			   const navItems = document.querySelectorAll('.navbar > li');
-			   let openDropdown = null;
-			   navItems.forEach(item => {
-				   const btn = item.querySelector('button');
-				   const dropdown = item.querySelector('.dropdown');
-				   let timeout;
-				   function openMenu() {
-					   // Close any open dropdowns first
-					   navItems.forEach(other => {
-						   if (other !== item) {
-							   const otherBtn = other.querySelector('button');
-							   const otherDropdown = other.querySelector('.dropdown');
-							   otherBtn.setAttribute('aria-expanded', 'false');
-							   otherDropdown.style.display = '';
-						   }
-					   });
-					   btn.setAttribute('aria-expanded', 'true');
-					   dropdown.style.display = 'block';
-					   openDropdown = dropdown;
-				   }
-				   function closeMenu() {
-					   btn.setAttribute('aria-expanded', 'false');
-					   dropdown.style.display = '';
-					   if (openDropdown === dropdown) openDropdown = null;
-				   }
-				   btn.addEventListener('mouseenter', function() {
-					   clearTimeout(timeout);
-					   openMenu();
-				   });
-				   btn.addEventListener('mouseleave', function() {
-					   timeout = setTimeout(closeMenu, 250);
-				   });
-				   dropdown.addEventListener('mouseenter', function() {
-					   clearTimeout(timeout);
-					   openMenu();
-				   });
-				   dropdown.addEventListener('mouseleave', function() {
-					   timeout = setTimeout(closeMenu, 250);
-				   });
-				   btn.addEventListener('focus', openMenu);
-				   btn.addEventListener('blur', function() {
-					   timeout = setTimeout(closeMenu, 250);
-				   });
-			   });
-			   // Close all dropdowns on click outside
-			   document.addEventListener('click', function(e) {
-				   if (!e.target.closest('nav')) {
-					   navItems.forEach(item => {
-						   const btn = item.querySelector('button');
-						   const dropdown = item.querySelector('.dropdown');
-						   btn.setAttribute('aria-expanded', 'false');
-						   dropdown.style.display = '';
-					   });
-					   openDropdown = null;
-				   }
-			   });
-		   })();
-	</script>
+	<footer class="wrap">
+		<span>© 2025 Kubernix · <a href="https://kubernix.com">kubernix.com</a> · <a href="https://blog.kubernix.com">blog.kubernix.com</a></span>
+	</footer>
 </body>
 </html>
