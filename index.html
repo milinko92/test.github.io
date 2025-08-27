@@ -621,16 +621,9 @@ footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; 
 				<li><a href="https://blog.kubernix.com">Blog</a></li>
 			</ul>
 			<hr>
-			/* Back-to-top button (add to your <style> in <head>) */
-#toTop{
-  position: fixed; right: 24px; bottom: 24px;
-  background: var(--surface); color: var(--text);
-  border: 1px solid var(--border); border-radius: 999px;
-  padding: .55rem .9rem; line-height:1; cursor: pointer;
-  box-shadow: var(--shadow);
-  opacity: 0; pointer-events: none; transition: opacity .2s ease;
-}
-#toTop.show{ opacity: 1; pointer-events: auto; }
+			
+<!-- Back to top button (place before </body>) -->
+<button id="toTop" aria-label="Back to top" title="Back to top">↑ Top</button>
 
 		</section>
 	</main>
