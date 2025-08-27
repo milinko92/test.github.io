@@ -135,15 +135,25 @@
   h1[id], h2[id], h3[id]{ scroll-margin-top: 90px; }
 
   /* Back-to-top button */
-  #toTop{
-    position: fixed; right: 24px; bottom: 24px;
-    background: var(--surface); color: var(--text);
-    border: 1px solid var(--border); border-radius: 999px;
-    padding: .55rem .9rem; line-height:1; cursor: pointer;
-    box-shadow: var(--shadow);
-    opacity: 0; pointer-events: none; transition: opacity .2s ease;
-  }
-  #toTop.show{ opacity: 1; pointer-events: auto; }
+ #toTop{
+  position: fixed;
+  right: 96px;          
+  bottom: 24px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: .7rem 1.05rem;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+}
+#toTop.show{ opacity: 1; pointer-events: auto; }
+
   </style>
 </head>
 <body>
@@ -280,23 +290,28 @@
     });
 
     // Back-to-top button behavior
-    const toTop = document.getElementById('toTop');
-    const showAfter = 300; // px
-    const onScroll = () => {
-      if (window.scrollY > showAfter) {
-        toTop.classList.add('show');
-      } else {
-        toTop.classList.remove('show');
-      }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
+<script>
+(function(){
+  const toTop = document.getElementById('toTop');
+  if (!toTop) return;
 
-    toTop.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      closeAll(); // also close any open menu
-    });
-  })();
+  const showAfter = 300; // px scrolled before showing
+  const onScroll = () => {
+    if (window.scrollY > showAfter) {
+      toTop.classList.add('show');
+    } else {
+      toTop.classList.remove('show');
+    }
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  toTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // close any open dropdowns (same behavior as gear)
+    document.querySelectorAll('nav.menus details[open]').forEach(d => d.removeAttribute('open'));
+  });
+})();
   </script>
 </body>
 </html>
