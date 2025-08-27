@@ -118,7 +118,431 @@
 	@media (prefers-reduced-motion: reduce){ *{animation: none !important; transition: none !important} }
 	@media (max-width: 780px){ .infobox{float:none; width:100%; margin: 0 0 16px 0} }
 	</style>
+<style>
+
+/* ===== Dropdown UX Patch ===== */
+:root{
+  --menu-gap: 10px;
+  --menu-pad-y: 8px;
+  --menu-pad-x: 12px;
+  --menu-item-pad-y: 8px;
+  --menu-item-pad-x: 12px;
+  --menu-radius: 10px;
+}
+
+nav.menus{
+  display: flex;
+  gap: var(--menu-gap);
+  flex-wrap: wrap;
+}
+
+/* Menu trigger block */
+nav.menus details{
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--menu-radius);
+  background: var(--surface);
+  padding: 0;
+  isolation: isolate;
+}
+
+/* Trigger (Summary) */
+nav.menus details > summary{
+  list-style: none;
+  cursor: pointer;
+  outline: none;
+  color: var(--text);
+  padding: var(--menu-pad-y) var(--menu-pad-x);
+  line-height: 1.2;
+  display: flex; align-items: center; gap: 6px;
+  border-radius: var(--menu-radius);
+}
+
+nav.menus details[open] > summary,
+nav.menus details:hover > summary{
+  background: var(--primary-10);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+/* Dropdown panel */
+nav.menus details ul{
+  position: absolute;
+  left: 0;
+  top: calc(100% - 1px);
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 0;
+  border-bottom-left-radius: var(--menu-radius);
+  border-bottom-right-radius: var(--menu-radius);
+  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+  min-width: 210px;
+  width: max-content;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+/* Show rules: hover or focus within */
+nav.menus details:hover ul,
+nav.menus details:focus-within ul{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Menu items */
+nav.menus details ul li + li{
+  border-top: 1px dashed var(--border);
+}
+nav.menus details ul a{
+  display: block;
+  padding: var(--menu-item-pad-y) var(--menu-item-pad-x);
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--text);
+}
+nav.menus details ul a:hover{
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  border-radius: 8px;
+}
+
+/* Keep dropdowns inside viewport on narrow screens */
+@media (max-width: 520px){
+  nav.menus details ul{ left: 0; right: auto; min-width: 60vw; }
+}
+
+</style>
+<style>
+:root{
+  --bg: #30363d;
+  --surface: #24292f;
+  --text: #e6edf3;
+  --muted: #9aa4b2;
+  --primary: #a5d6ff;
+  --primary-10: rgba(165,214,255,.12);
+  --accent: #ffcc8a;
+  --border: #3a4149;
+  --focus: #7fb5ff;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+@media (prefers-reduced-motion: no-preference){
+  :root{ scroll-behavior: smooth; }
+}
+
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.wrap{max-width: 1000px; margin: 0 auto; padding: 32px 16px;}
+
+header{
+  position: sticky; top:0; z-index:20;
+  backdrop-filter: blur(6px);
+  background: color-mix(in oklab, var(--surface) 85%, #000 15% / 85%);
+  border-bottom: 1px solid var(--border);
+}
+header .bar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0;}
+.brand{font-weight:800; letter-spacing:.5px; font-size: clamp(18px, 3vw, 22px); color: var(--text)}
+.tag{color: var(--muted); font-weight:500}
+
+nav .menus{display:flex; gap:10px; flex-wrap:wrap}
+details{
+  position:relative; display:inline-block;
+  border:1px solid var(--border); border-radius:10px; background: var(--surface);
+  padding:6px 10px;
+}
+details > summary{list-style:none; cursor:pointer; outline:none; color: var(--text)}
+details[open] > summary{border-bottom:1px dashed var(--border)}
+details ul{
+  position:absolute; left:0; top: calc(100% + 2px);
+  margin:0; padding:4px; list-style:none;
+  background: var(--surface);
+  border:1px solid var(--border); border-radius:10px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+  width: max-content;
+  min-width: 180px;
+  z-index: 50;
+}
+details ul li{margin:0; padding:0}
+details ul li a{display:block; padding:6px 10px; text-decoration:none; white-space: nowrap;}
+details ul li a:hover{background: color-mix(in oklab, var(--primary) 12%, transparent); border-radius:8px; text-decoration:none}
+
+a{color: var(--primary); text-decoration: none}
+a:hover{text-decoration: underline}
+a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible{
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.paper{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+}
+
+.infobox{
+  float:right; width:min(280px, 40%); margin: 0 0 16px 24px;
+  background: color-mix(in oklab, var(--surface) 85%, #000 15%);
+  border:1px solid var(--border); border-radius:12px; padding:12px 14px;
+  font-size: 14px; color: var(--text);
+}
+.infobox h3{margin:.2rem 0 .4rem 0; font-size:16px; color: var(--accent)}
+.infobox table{width:100%; border-collapse: collapse}
+.infobox td{padding:6px 8px; border-bottom:1px dashed var(--border)}
+.infobox td:first-child{color: var(--muted); white-space: nowrap; padding-right:12px;}
+
+h1{margin: 0 0 8px 0; font-size: clamp(26px, 4vw, 34px)}
+h2{margin-top: 26px; font-size: 20px; border-bottom: 1px solid var(--border); padding-bottom:6px; color: var(--accent)}
+p{line-height:1.7}
+ul{line-height:1.7}
+
+.badge{display:inline-block; padding:2px 8px; border-radius:999px; background: var(--primary-10); color: var(--primary); border:1px solid color-mix(in oklab, var(--primary) 35%, #000 65%)}
+
+footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; padding:18px 0; margin-top:32px}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation: none !important; transition: none !important}
+}
+
+@media (max-width: 780px){
+  .infobox{float:none; width:100%; margin: 0 0 16px 0}
+}
+
+</style>
 </head>
+<style>
+
+/* ===== Dropdown UX Patch ===== */
+:root{
+  --menu-gap: 10px;
+  --menu-pad-y: 8px;
+  --menu-pad-x: 12px;
+  --menu-item-pad-y: 8px;
+  --menu-item-pad-x: 12px;
+  --menu-radius: 10px;
+}
+
+nav.menus{
+  display: flex;
+  gap: var(--menu-gap);
+  flex-wrap: wrap;
+}
+
+/* Menu trigger block */
+nav.menus details{
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--menu-radius);
+  background: var(--surface);
+  padding: 0;
+  isolation: isolate;
+}
+
+/* Trigger (Summary) */
+nav.menus details > summary{
+  list-style: none;
+  cursor: pointer;
+  outline: none;
+  color: var(--text);
+  padding: var(--menu-pad-y) var(--menu-pad-x);
+  line-height: 1.2;
+  display: flex; align-items: center; gap: 6px;
+  border-radius: var(--menu-radius);
+}
+
+nav.menus details[open] > summary,
+nav.menus details:hover > summary{
+  background: var(--primary-10);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+/* Dropdown panel */
+nav.menus details ul{
+  position: absolute;
+  left: 0;
+  top: calc(100% - 1px);
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 0;
+  border-bottom-left-radius: var(--menu-radius);
+  border-bottom-right-radius: var(--menu-radius);
+  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+  min-width: 210px;
+  width: max-content;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+/* Show rules: hover or focus within */
+nav.menus details:hover ul,
+nav.menus details:focus-within ul{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Menu items */
+nav.menus details ul li + li{
+  border-top: 1px dashed var(--border);
+}
+nav.menus details ul a{
+  display: block;
+  padding: var(--menu-item-pad-y) var(--menu-item-pad-x);
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--text);
+}
+nav.menus details ul a:hover{
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  border-radius: 8px;
+}
+
+/* Keep dropdowns inside viewport on narrow screens */
+@media (max-width: 520px){
+  nav.menus details ul{ left: 0; right: auto; min-width: 60vw; }
+}
+
+</style>
+<style>
+:root{
+  --bg: #30363d;
+  --surface: #24292f;
+  --text: #e6edf3;
+  --muted: #9aa4b2;
+  --primary: #a5d6ff;
+  --primary-10: rgba(165,214,255,.12);
+  --accent: #ffcc8a;
+  --border: #3a4149;
+  --focus: #7fb5ff;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+@media (prefers-reduced-motion: no-preference){
+  :root{ scroll-behavior: smooth; }
+}
+
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.wrap{max-width: 1000px; margin: 0 auto; padding: 32px 16px;}
+
+header{
+  position: sticky; top:0; z-index:20;
+  backdrop-filter: blur(6px);
+  background: color-mix(in oklab, var(--surface) 85%, #000 15% / 85%);
+  border-bottom: 1px solid var(--border);
+}
+header .bar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0;}
+.brand{font-weight:800; letter-spacing:.5px; font-size: clamp(18px, 3vw, 22px); color: var(--text)}
+.tag{color: var(--muted); font-weight:500}
+
+nav .menus{display:flex; gap:10px; flex-wrap:wrap}
+details{
+  position:relative; display:inline-block;
+  border:1px solid var(--border); border-radius:10px; background: var(--surface);
+  padding:6px 10px;
+}
+details > summary{list-style:none; cursor:pointer; outline:none; color: var(--text)}
+details[open] > summary{border-bottom:1px dashed var(--border)}
+details ul{
+  position:absolute; left:0; top: calc(100% + 2px);
+  margin:0; padding:4px; list-style:none;
+  background: var(--surface);
+  border:1px solid var(--border); border-radius:10px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+  width: max-content;
+  min-width: 180px;
+  z-index: 50;
+}
+details ul li{margin:0; padding:0}
+details ul li a{display:block; padding:6px 10px; text-decoration:none; white-space: nowrap;}
+details ul li a:hover{background: color-mix(in oklab, var(--primary) 12%, transparent); border-radius:8px; text-decoration:none}
+
+a{color: var(--primary); text-decoration: none}
+a:hover{text-decoration: underline}
+a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible{
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.paper{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+}
+
+.infobox{
+  float:right; width:min(280px, 40%); margin: 0 0 16px 24px;
+  background: color-mix(in oklab, var(--surface) 85%, #000 15%);
+  border:1px solid var(--border); border-radius:12px; padding:12px 14px;
+  font-size: 14px; color: var(--text);
+}
+.infobox h3{margin:.2rem 0 .4rem 0; font-size:16px; color: var(--accent)}
+.infobox table{width:100%; border-collapse: collapse}
+.infobox td{padding:6px 8px; border-bottom:1px dashed var(--border)}
+.infobox td:first-child{color: var(--muted); white-space: nowrap; padding-right:12px;}
+
+h1{margin: 0 0 8px 0; font-size: clamp(26px, 4vw, 34px)}
+h2{margin-top: 26px; font-size: 20px; border-bottom: 1px solid var(--border); padding-bottom:6px; color: var(--accent)}
+p{line-height:1.7}
+ul{line-height:1.7}
+
+.badge{display:inline-block; padding:2px 8px; border-radius:999px; background: var(--primary-10); color: var(--primary); border:1px solid color-mix(in oklab, var(--primary) 35%, #000 65%)}
+
+footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; padding:18px 0; margin-top:32px}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation: none !important; transition: none !important}
+}
+
+@media (max-width: 780px){
+  .infobox{float:none; width:100%; margin: 0 0 16px 0}
+}
+
+</style>
 </head>
 <body>
 	<header>
@@ -204,5 +628,27 @@
 	<footer class="wrap">
 		<span>© 2025 Kubernix · <a href="https://kubernix.com">kubernix.com</a> · <a href="https://blog.kubernix.com">blog.kubernix.com</a></span>
 	</footer>
+
+<script>
+(function(){
+  const menus = document.querySelector('nav.menus');
+  if (!menus) return;
+  const items = Array.from(menus.querySelectorAll('details'));
+  function closeAll(except){
+    items.forEach(d => { if (d !== except) d.removeAttribute('open'); });
+  }
+  items.forEach(d => {
+    d.addEventListener('mouseenter', () => { d.setAttribute('open',''); closeAll(d); });
+    d.addEventListener('mouseleave', () => { d.removeAttribute('open'); });
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('nav.menus')) closeAll();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
+})();
+</script>
+
 </body>
 </html>

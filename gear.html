@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Homelab PCs - Kubernix</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gear · Kubernix</title>
+  <meta name="description" content="All homelab gear in one place: network, compute, daily desktop and services." />
   <style>
   :root {
     --bg: #30363d;
@@ -17,6 +18,12 @@
     --focus: #7fb5ff;
     --radius: 14px;
     --shadow: 0 10px 30px rgba(0,0,0,.35);
+    --menu-gap: 10px;
+    --menu-pad-y: 8px;
+    --menu-pad-x: 12px;
+    --menu-item-pad-y: 8px;
+    --menu-item-pad-x: 12px;
+    --menu-radius: 10px;
   }
   @media (prefers-reduced-motion: no-preference){ :root{ scroll-behavior: smooth; } }
   html,body{height:100%}
@@ -40,16 +47,30 @@
   .brand{font-weight:800; letter-spacing:.5px; font-size: clamp(18px, 3vw, 22px); color: var(--text)}
   .tag{color: var(--muted); font-weight:500}
   /* nav.menus rules replaced by Dropdown UX Patch */
-  /* details base rules replaced by Dropdown UX Patch */
-  details > summary{list-style:none; cursor:pointer; outline:none; color: var(--text);}
-  /* open state rules replaced by Dropdown UX Patch */
-  /* dropdown panel rules replaced by Dropdown UX Patch */
-  details:not([open]):not(:hover) ul {
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.18s cubic-bezier(.4,0,.2,1);
+  nav.menus /* details base rules replaced by Dropdown UX Patch */
+  /* summary rules replaced by Dropdown UX Patch */
+  nav.menus /* open state rules replaced by Dropdown UX Patch */
+  nav.menus /* dropdown panel rules replaced by Dropdown UX Patch */
+  nav.menus details:hover ul,
+  nav.menus details:focus-within ul{
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
   }
-  /* open state rules replaced by Dropdown UX Patch */
+  nav.menus details ul li + li{
+    border-top: 1px dashed var(--border);
+  }
+  nav.menus details ul a{
+    display: block;
+    padding: var(--menu-item-pad-y) var(--menu-item-pad-x);
+    white-space: nowrap;
+    text-decoration: none;
+    color: var(--text);
+  }
+  nav.menus details ul a:hover{
+    background: color-mix(in oklab, var(--primary) 12%, transparent);
+    border-radius: 8px;
+  }
   a{color: var(--primary); text-decoration: none}
   a:hover{text-decoration: underline}
   a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible{
@@ -72,9 +93,13 @@
   footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; padding:18px 0; margin-top:32px}
   @media (prefers-reduced-motion: reduce){ *{animation: none !important; transition: none !important} }
   @media (max-width: 780px){ }
+  @media (max-width: 520px){
+    nav.menus /* dropdown panel rules replaced by Dropdown UX Patch */
+  }
   
 
-/* ===== Dropdown UX Patch (Hover to Open, Consistent Spacing) ===== */
+
+/* ===== Dropdown UX Patch ===== */
 :root{
   --menu-gap: 10px;
   --menu-pad-y: 8px;
@@ -98,8 +123,8 @@ nav.menus details{
   border: 1px solid var(--border);
   border-radius: var(--menu-radius);
   background: var(--surface);
-  padding: 0;                           /* let summary control internal spacing */
-  isolation: isolate;                   /* avoid weird z-index stacking */
+  padding: 0;
+  isolation: isolate;
 }
 
 /* Trigger (Summary) */
@@ -126,7 +151,7 @@ nav.menus details:hover > summary{
 nav.menus details ul{
   position: absolute;
   left: 0;
-  top: calc(100% - 1px);                /* attach flush to the trigger */
+  top: calc(100% - 1px);
   margin: 0;
   padding: 4px 0;
   list-style: none;
@@ -145,7 +170,7 @@ nav.menus details ul{
   transition: opacity .16s ease, transform .16s ease;
 }
 
-/* Show rules on hover/focus */
+/* Show rules: hover or focus within */
 nav.menus details:hover ul,
 nav.menus details:focus-within ul{
   opacity: 1;
@@ -153,7 +178,7 @@ nav.menus details:focus-within ul{
   transform: translateY(0);
 }
 
-/* Items */
+/* Menu items */
 nav.menus details ul li + li{
   border-top: 1px dashed var(--border);
 }
@@ -173,6 +198,7 @@ nav.menus details ul a:hover{
 @media (max-width: 520px){
   nav.menus details ul{ left: 0; right: auto; min-width: 60vw; }
 }
+
 
 </style>
 <style>
@@ -287,12 +313,12 @@ footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; 
 </head>
 <body>
   <header>
-    <div class="wrap bar">
+    <div class="wrap bar" style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
       <div>
-        <div class="brand">Homelab PCs</div>
-        <div class="tag">Details about Homelab PCs and setup.</div>
+        <div class="brand">Kubernix</div>
+        <div class="tag">DevOps Journey · Homelab · Cloud</div>
       </div>
-      <nav class="menus">
+      <nav class="menus menus">
         <details>
           <summary>Gear</summary>
           <ul>
@@ -313,23 +339,69 @@ footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; 
         <details>
           <summary>Resources</summary>
           <ul>
-            <li><a href="index.html">GitHub Page</a></li>
-              <li><a href="https://github.com/milinko92/kubernix.github.io/tree/main" target="_blank" rel="noopener">GitHub Page</a></li>
+            <li><a href="https://github.com/milinko92/kubernix.github.io/tree/main" target="_blank" rel="noopener">GitHub Page</a></li>
             <li><a href="https://blog.kubernix.com" target="_blank" rel="noopener">Personal Blog</a></li>
           </ul>
         </details>
       </nav>
+      </nav>
     </div>
   </header>
+
   <main class="wrap">
     <section class="paper">
-      <h2>Homelab PCs</h2>
-      <p>Add your Homelab PCs details here...</p>
+      <h1>Gear Overview</h1>
+      <p class="muted">A professional summary of all homelab and desktop equipment, network, and services in use.</p>
+      <h2>Summary</h2>
+      <ul>
+        <li><strong>Last updated:</strong> 2025-08-26</li>
+        <li><strong>Scope:</strong> End-to-end inventory: network, compute, desktop, services</li>
+        <li><strong>Maintainer:</strong> Kubernix</li>
+        <li><strong>Location:</strong> Private homelab, home office</li>
+        <li><strong>Purpose:</strong> Experimentation, learning, and production-like testing for DevOps, networking, and automation</li>
+        <li><strong>Highlights:</strong> VLAN-segmented network, virtualization, automation, and monitoring</li>
+        <li><strong>Contact:</strong> <a href="https://github.com/milinko92/kubernix.github.io/tree/main" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+      <hr>
+      <h2>Network</h2>
+      <ul>
+        <li><strong>Gateway / Router (ISP):</strong> Internet edge, NAT, default gateway (managed by ISP)</li>
+        <li><strong>Switch — Netgear GS724T v3:</strong> 24× Gigabit Smart Managed (802.1Q VLANs), VLANs: 10/20/30/40/50/60, Trunks: Ports 1–2 to router/firewall, Admin: Desktop on port 3 (tagged access)</li>
+        <li><strong>Docs:</strong> <a href="README.md">VLAN Membership & PVID Plan</a>, <a href="vlan_membership.csv">Membership CSV</a>, <a href="pvid_table.csv">PVID CSV</a></li>
+      </ul>
+      <hr>
+      <h2>Compute</h2>
+      <ul>
+        <li><strong>HP EliteDesk 800 G2 DM:</strong> i5-6600T, 8GB RAM, 224GB SSD, Intel HD Graphics</li>
+        <li><strong>Dell D13S:</strong> i3-8100T, 8GB RAM, 224GB SSD, Intel HD Graphics</li>
+      </ul>
+      <hr>
+      <h2>Daily Desktop (Gaming / Workstation)</h2>
+      <ul>
+        <li><strong>CPU:</strong> i5-13600K (14-Core, up to 5.10GHz)</li>
+        <li><strong>Motherboard:</strong> ASUS TUF Gaming Z790-Pro WiFi (DDR5)</li>
+        <li><strong>Memory:</strong> 32GB DDR5-6400</li>
+        <li><strong>GPU:</strong> RTX 4070 SUPER</li>
+        <li><strong>Cooler:</strong> NOCTUA NH-D15 chromax.black</li>
+        <li><strong>Case:</strong> FRACTAL DESIGN North</li>
+        <li><strong>PSU:</strong> SEASONIC Prime PX 850W</li>
+        <li><strong>Storage:</strong> 1TB + 2TB Samsung 990 PRO NVMe</li>
+      </ul>
+      <hr>
+      <h2>Services</h2>
+      <ul>
+        <li><strong>Raspberry Pi (DNS + VPN):</strong> VLAN 10 (untagged) + tagged access to 20/30/40/50/60, Services: Pi-hole + Unbound DNS, VPN gateway</li>
+      </ul>
     </section>
   </main>
 
+  <button id="toTop" aria-label="Back to top">↑ Top</button>
+
+  
+
+
+
 <script>
-/* Ensure only one dropdown is open at a time; open on hover, close on mouseleave */
 (function(){
   const menus = document.querySelector('nav.menus');
   if (!menus) return;
@@ -349,6 +421,5 @@ footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; 
   });
 })();
 </script>
-
 </body>
 </html>

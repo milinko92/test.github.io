@@ -39,48 +39,17 @@
     header .bar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0;}
     .brand{font-weight:800; letter-spacing:.5px; font-size: clamp(18px, 3vw, 22px); color: var(--text)}
     .tag{color: var(--muted); font-weight:500}
-    nav .menus{display:flex; gap:10px; flex-wrap:wrap}
-    details{
-      position:relative; display:inline-block;
-      border:1px solid var(--border); border-radius:10px; background: var(--surface);
-      padding:6px 10px;
-      margin-right: 8px;
-    }
+    /* nav.menus rules replaced by Dropdown UX Patch */
+    /* details base rules replaced by Dropdown UX Patch */
     details > summary{list-style:none; cursor:pointer; outline:none; color: var(--text);}
-    details[open] > summary,
-    details:hover > summary {
-      border-bottom:1px dashed var(--border);
-      background: var(--primary-10);
-      border-radius: 10px 10px 0 0;
-    }
-    details ul{
-      position:absolute; left:0; top: calc(100% + 2px);
-      margin:0; padding:8px 0; list-style:none;
-      background: var(--surface);
-      border:1px solid var(--border); border-radius:10px;
-      box-shadow: 0 10px 24px rgba(0,0,0,.45);
-      width: max-content;
-      min-width: 200px;
-      z-index: 50;
-      pointer-events: auto;
-      opacity: 1;
-      font-size: 1.05em;
-      transition: opacity 0.18s cubic-bezier(.4,0,.2,1);
-      letter-spacing: 0.01em;
-    }
+    /* open state rules replaced by Dropdown UX Patch */
+    /* dropdown panel rules replaced by Dropdown UX Patch */
     details:not([open]):not(:hover) ul {
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.18s cubic-bezier(.4,0,.2,1);
     }
-    details[open]:hover ul,
-    details[open]:focus-within ul,
-    details:hover ul,
-    details:focus-within ul {
-      pointer-events: auto;
-      opacity: 1;
-      transition: opacity 0.18s cubic-bezier(.4,0,.2,1);
-    }
+    /* open state rules replaced by Dropdown UX Patch */
     a{color: var(--primary); text-decoration: none}
     a:hover{text-decoration: underline}
     a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible{
@@ -103,7 +72,230 @@
     footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; padding:18px 0; margin-top:32px}
     @media (prefers-reduced-motion: reduce){ *{animation: none !important; transition: none !important} }
     @media (max-width: 780px){ }
-    </style>
+    
+
+/* ===== Dropdown UX Patch (Hover to Open, Consistent Spacing) ===== */
+:root{
+  --menu-gap: 10px;
+  --menu-pad-y: 8px;
+  --menu-pad-x: 12px;
+  --menu-item-pad-y: 8px;
+  --menu-item-pad-x: 12px;
+  --menu-radius: 10px;
+}
+
+nav.menus{
+  display: flex;
+  gap: var(--menu-gap);
+  flex-wrap: wrap;
+}
+
+/* Menu trigger block */
+nav.menus details{
+  position: relative;
+  display: inline-block;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--menu-radius);
+  background: var(--surface);
+  padding: 0;                           /* let summary control internal spacing */
+  isolation: isolate;                   /* avoid weird z-index stacking */
+}
+
+/* Trigger (Summary) */
+nav.menus details > summary{
+  list-style: none;
+  cursor: pointer;
+  outline: none;
+  color: var(--text);
+  padding: var(--menu-pad-y) var(--menu-pad-x);
+  line-height: 1.2;
+  display: flex; align-items: center; gap: 6px;
+  border-radius: var(--menu-radius);
+}
+
+nav.menus details[open] > summary,
+nav.menus details:hover > summary{
+  background: var(--primary-10);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom: 1px dashed var(--border);
+}
+
+/* Dropdown panel */
+nav.menus details ul{
+  position: absolute;
+  left: 0;
+  top: calc(100% - 1px);                /* attach flush to the trigger */
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 0;
+  border-bottom-left-radius: var(--menu-radius);
+  border-bottom-right-radius: var(--menu-radius);
+  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+  min-width: 210px;
+  width: max-content;
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition: opacity .16s ease, transform .16s ease;
+}
+
+/* Show rules on hover/focus */
+nav.menus details:hover ul,
+nav.menus details:focus-within ul{
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* Items */
+nav.menus details ul li + li{
+  border-top: 1px dashed var(--border);
+}
+nav.menus details ul a{
+  display: block;
+  padding: var(--menu-item-pad-y) var(--menu-item-pad-x);
+  white-space: nowrap;
+  text-decoration: none;
+  color: var(--text);
+}
+nav.menus details ul a:hover{
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  border-radius: 8px;
+}
+
+/* Keep dropdowns inside viewport on narrow screens */
+@media (max-width: 520px){
+  nav.menus details ul{ left: 0; right: auto; min-width: 60vw; }
+}
+
+
+
+/* --- Raspberry Pi page utilities (from source) --- */
+.paper { border-radius:16px; padding:2rem; }
+pre { overflow:auto; padding:1rem; border-radius:12px; background:var(--code-bg, #111418); border:1px solid var(--border, #2b3037); }
+code { font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size:0.95rem; }
+.muted { opacity:.85; }
+.kbd { padding:2px 6px; border:1px solid var(--border, #2b3037); border-radius:6px; background:var(--card-bg, #1f2329); font-family:inherit; font-size:0.9em; }
+.tagline { font-size:0.9rem; opacity:.8; }
+.back-btn { display:inline-block; margin-top:2rem; padding:0.6rem 1.2rem; background:#2b3037; color:#fff; border-radius:8px; text-decoration:none; }
+.back-btn:hover { background:#444b57; }
+
+</style>
+<style>
+:root{
+  --bg: #30363d;
+  --surface: #24292f;
+  --text: #e6edf3;
+  --muted: #9aa4b2;
+  --primary: #a5d6ff;
+  --primary-10: rgba(165,214,255,.12);
+  --accent: #ffcc8a;
+  --border: #3a4149;
+  --focus: #7fb5ff;
+  --radius: 14px;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
+}
+
+@media (prefers-reduced-motion: no-preference){
+  :root{ scroll-behavior: smooth; }
+}
+
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.wrap{max-width: 1000px; margin: 0 auto; padding: 32px 16px;}
+
+header{
+  position: sticky; top:0; z-index:20;
+  backdrop-filter: blur(6px);
+  background: color-mix(in oklab, var(--surface) 85%, #000 15% / 85%);
+  border-bottom: 1px solid var(--border);
+}
+header .bar{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 0;}
+.brand{font-weight:800; letter-spacing:.5px; font-size: clamp(18px, 3vw, 22px); color: var(--text)}
+.tag{color: var(--muted); font-weight:500}
+
+nav .menus{display:flex; gap:10px; flex-wrap:wrap}
+details{
+  position:relative; display:inline-block;
+  border:1px solid var(--border); border-radius:10px; background: var(--surface);
+  padding:6px 10px;
+}
+details > summary{list-style:none; cursor:pointer; outline:none; color: var(--text)}
+details[open] > summary{border-bottom:1px dashed var(--border)}
+details ul{
+  position:absolute; left:0; top: calc(100% + 2px);
+  margin:0; padding:4px; list-style:none;
+  background: var(--surface);
+  border:1px solid var(--border); border-radius:10px;
+  box-shadow: 0 10px 24px rgba(0,0,0,.45);
+  width: max-content;
+  min-width: 180px;
+  z-index: 50;
+}
+details ul li{margin:0; padding:0}
+details ul li a{display:block; padding:6px 10px; text-decoration:none; white-space: nowrap;}
+details ul li a:hover{background: color-mix(in oklab, var(--primary) 12%, transparent); border-radius:8px; text-decoration:none}
+
+a{color: var(--primary); text-decoration: none}
+a:hover{text-decoration: underline}
+a:focus-visible, button:focus-visible, summary:focus-visible, [tabindex]:focus-visible{
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.paper{
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+}
+
+.infobox{
+  float:right; width:min(280px, 40%); margin: 0 0 16px 24px;
+  background: color-mix(in oklab, var(--surface) 85%, #000 15%);
+  border:1px solid var(--border); border-radius:12px; padding:12px 14px;
+  font-size: 14px; color: var(--text);
+}
+.infobox h3{margin:.2rem 0 .4rem 0; font-size:16px; color: var(--accent)}
+.infobox table{width:100%; border-collapse: collapse}
+.infobox td{padding:6px 8px; border-bottom:1px dashed var(--border)}
+.infobox td:first-child{color: var(--muted); white-space: nowrap; padding-right:12px;}
+
+h1{margin: 0 0 8px 0; font-size: clamp(26px, 4vw, 34px)}
+h2{margin-top: 26px; font-size: 20px; border-bottom: 1px solid var(--border); padding-bottom:6px; color: var(--accent)}
+p{line-height:1.7}
+ul{line-height:1.7}
+
+.badge{display:inline-block; padding:2px 8px; border-radius:999px; background: var(--primary-10); color: var(--primary); border:1px solid color-mix(in oklab, var(--primary) 35%, #000 65%)}
+
+footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; padding:18px 0; margin-top:32px}
+
+@media (prefers-reduced-motion: reduce){
+  *{animation: none !important; transition: none !important}
+}
+
+@media (max-width: 780px){
+  .infobox{float:none; width:100%; margin: 0 0 16px 0}
+}
+
+</style>
 </head>
 <body>
   <header>
@@ -133,7 +325,7 @@
         <details>
           <summary>Resources</summary>
           <ul>
-            <li><a href="index.html">GitHub Page</a></li>
+            
               <li><a href="https://github.com/milinko92/kubernix.github.io/tree/main" target="_blank" rel="noopener">GitHub Page</a></li>
             <li><a href="https://blog.kubernix.com" target="_blank" rel="noopener">Personal Blog</a></li>
           </ul>
@@ -141,11 +333,150 @@
       </nav>
     </div>
   </header>
-  <main class="wrap">
-    <section class="paper">
-      <h2>Raspberry Pi with Unbound</h2>
-      <p>Add your Pi-hole with Unbound project details here...</p>
-    </section>
+  <main class="wrap" id="top">
+    <article class="paper">
+      <h1>Pi-hole + Unbound on Raspberry Pi 4 (Homelab Guide)</h1>
+      <p class="tagline">Network-wide ad blocking with a validating, recursive, caching DNS resolver.</p>
+
+      <h2 id="introduction">Introduction</h2>
+      <p>
+        This document walks through step-by-step installation of <strong>Pi-hole</strong> (DNS sinkhole and ad blocker)
+        on a <strong>Raspberry Pi 4</strong>, together with <strong>Unbound</strong> as a local recursive and validating
+        DNS resolver. This combination ensures privacy, speed, and reliability – without relying on external DNS providers.
+      </p>
+
+      <h2 id="hardware">Required Hardware</h2>
+      <ul>
+        <li>Raspberry Pi 4 (2–4 GB RAM recommended) + power supply</li>
+        <li>microSD (≥ 16 GB, A1/A2 class recommended)</li>
+        <li>Ethernet cable (more stable than Wi-Fi for DNS server)</li>
+        <li>Case + cooling (optional)</li>
+      </ul>
+
+      <h2 id="software-install">Software Installation Steps</h2>
+      <ol>
+        <li><strong>Flash Raspberry Pi OS Lite (64‑bit)</strong> using Raspberry Pi Imager. Enable SSH and set a hostname.</li>
+        <li><strong>First login and system update</strong>:
+          <pre><code>sudo apt update && sudo apt full-upgrade -y
+sudo reboot</code></pre></li>
+        <li id="quick-commands"><strong>Set static IP address</strong> (example in <code>dhcpcd.conf</code>):
+          <pre><code>sudo nano /etc/dhcpcd.conf
+
+# Example (adjust to your network):
+interface eth0
+static ip_address=192.168.1.10/24
+static routers=192.168.1.1
+static domain_name_servers=127.0.0.1</code></pre>
+          <p class="muted">Note: For LAN DNS clients, the DHCP gateway should advertise this Pi-hole server's IP.</p>
+        </li>
+        <li><strong>Install Pi-hole</strong> (official installer):
+          <pre><code>curl -sSL https://install.pi-hole.net | bash</code></pre>
+          <p>During installation, select the interface (<code>eth0</code>), static IP, and temporary upstream DNS (e.g., Quad9). We will later switch to Unbound.</p>
+        </li>
+        <li><strong>Install Unbound</strong>:
+          <pre><code>sudo apt install -y unbound</code></pre></li>
+        <li><strong>Download root hints</strong> (optional cron for monthly refresh):
+          <pre><code>sudo mkdir -p /var/lib/unbound
+sudo wget -O /var/lib/unbound/root.hints https://www.internic.net/domain/named.root
+# (Optional) monthly auto-refresh:
+echo '0 3 1 * * root wget -qO /var/lib/unbound/root.hints https://www.internic.net/domain/named.root' | sudo tee /etc/cron.d/unbound-root-hints</code></pre></li>
+      </ol>
+
+      <h2 id="configuration">Configuration Steps</h2>
+      <ol>
+        <li id="unbound-config"><strong>Unbound configuration</strong> – create dedicated file:
+          <pre><code>sudo nano /etc/unbound/unbound.conf.d/pi-hole.conf</code></pre>
+          <pre><code>server:
+  verbosity: 0
+  logfile: "/var/log/unbound/unbound.log"
+  interface: 127.0.0.1
+  port: 5335
+  do-daemonize: no
+  use-caps-for-id: no
+  edns-buffer-size: 1232
+  prefetch: yes
+  qname-minimisation: yes
+  harden-dnssec-stripped: yes
+  harden-glue: yes
+  harden-referral-path: yes
+  aggressive-nsec: yes
+  root-hints: "/var/lib/unbound/root.hints"
+  cache-min-ttl: 3600
+  cache-max-ttl: 86400
+  msg-cache-size: 128m
+  rrset-cache-size: 256m
+  so-rcvbuf: 1m
+  so-sndbuf: 1m
+  access-control: 127.0.0.0/8 allow</code></pre>
+          <p>Check config and start service:</p>
+          <pre><code>sudo unbound-checkconf
+sudo systemctl enable --now unbound</code></pre></li>
+        <li><strong>Pi-hole → Upstream DNS = Unbound</strong>:
+          <p>In <span class="kbd">http://&lt;IP-of-Pi&gt;/admin</span> → <em>Settings → DNS</em> enable <em>Custom 1 (IPv4)</em> and set:</p>
+          <pre><code>127.0.0.1#5335</code></pre>
+          <p>Disable all other external upstream options so queries go only through Unbound.</p></li>
+        <li><strong>DNSSEC:</strong> With Unbound as validator, you usually do not enable DNSSEC inside Pi-hole (Unbound already validates).</li>
+        <li><strong>Disable conflicting services on port 53 (if any):</strong>
+          <pre><code>sudo systemctl disable --now systemd-resolved</code></pre></li>
+      </ol>
+
+      <h3 id="verify">Verification / Tests</h3>
+      <pre><code># Query Unbound directly
+dig @127.0.0.1 -p 5335 example.com +dnssec +multi
+
+# Query via Pi-hole (port 53)
+dig @127.0.0.1 example.com +dnssec +multi
+
+# Test DNSSEC validation
+dig @127.0.0.1 -p 5335 dnssec-failed.org A +dnssec
+# Expect SERVFAIL (validation works)</code></pre>
+
+      <h2 id="troubleshooting">Troubleshooting Tips</h2>
+      <ul>
+        <li><strong>Port 53 in use?</strong> Check: <code>sudo ss -tulpn | grep :53</code>. Stop or reconfigure the conflicting service.</li>
+        <li><strong>Unbound not starting?</strong> Check logs: <code>sudo journalctl -u unbound -b</code>, and run <code>sudo unbound-checkconf</code>.</li>
+        <li><strong>Slow resolution?</strong> Ensure <code>edns-buffer-size</code> ≤ 1232 and MTU settings are correct (try 1500/1492).</li>
+        <li><strong>Pi-hole not blocking?</strong> Update gravity: <code>pihole -g</code> and confirm LAN clients use the Pi-hole IP as DNS.</li>
+        <li><strong>DNSSEC problems?</strong> Test with <code>dnssec-failed.org</code>. If all queries fail, temporarily disable DNSSEC in Pi-hole (keep Unbound validating).</li>
+        <li><strong>Outdated root hints?</strong> Refresh manually or via cron job as shown above.</li>
+      </ul>
+
+      <h2 id="references">Reference</h2>
+      <p>
+        Based on tutorial: 
+        <a href="https://www.crosstalksolutions.com/the-worlds-greatest-pi-hole-and-unbound-tutorial-2023/" target="_blank" rel="noopener">
+          Crosstalk Solutions — The World’s Greatest Pi-hole + Unbound Tutorial (2023)
+        </a>.
+      </p>
+
+      <a href="index.html" class="back-btn">← Back to Index</a>
+
+      <hr />
+      <p class="muted">© 2025 Kubernix — Homelab Documentation. Prepared for Raspberry Pi 4 and Pi-hole + Unbound setup with focus on privacy and performance.</p>
+    </article>
   </main>
+
+<script>
+/* Ensure only one dropdown is open at a time; open on hover, close on mouseleave */
+(function(){
+  const menus = document.querySelector('nav.menus');
+  if (!menus) return;
+  const items = Array.from(menus.querySelectorAll('details'));
+  function closeAll(except){
+    items.forEach(d => { if (d !== except) d.removeAttribute('open'); });
+  }
+  items.forEach(d => {
+    d.addEventListener('mouseenter', () => { d.setAttribute('open',''); closeAll(d); });
+    d.addEventListener('mouseleave', () => { d.removeAttribute('open'); });
+  });
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('nav.menus')) closeAll();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeAll();
+  });
+})();
+</script>
+
 </body>
 </html>
