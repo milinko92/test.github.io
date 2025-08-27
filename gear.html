@@ -27,7 +27,25 @@
     --menu-item-pad-x: 12px;
     --menu-radius: 10px;
   }
-
+  /* Back-to-top button */
+ #toTop{
+  position: fixed;
+  right: 96px;          
+  bottom: 24px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: .7rem 1.05rem;
+  font-size: 1.15rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .2s ease;
+}
+#toTop.show{ opacity: 1; pointer-events: auto; }
   @media (prefers-reduced-motion: no-preference){ :root{ scroll-behavior: smooth; } }
 
   html,body{height:100%}
@@ -133,26 +151,6 @@
 
   /* prevent sticky header from covering anchors */
   h1[id], h2[id], h3[id]{ scroll-margin-top: 90px; }
-
-  /* Back-to-top button */
- #toTop{
-  position: fixed;
-  right: 96px;          
-  bottom: 24px;
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  padding: .7rem 1.05rem;
-  font-size: 1.15rem;
-  line-height: 1;
-  cursor: pointer;
-  box-shadow: var(--shadow);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .2s ease;
-}
-#toTop.show{ opacity: 1; pointer-events: auto; }
 
   </style>
 </head>
