@@ -1,386 +1,231 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>DevOps Homelab — Journey & Projects</title>
-  <meta name="description" content="My homelab & DevOps journey: projects, gear, and resources." />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* ===== Theme (minimalist, dark background with light text) ===== */
-    :root{
-      /* Core palette */
-      --bg-0: #24292f;     /* page background */
-      --bg-1: #2d333b;     /* cards/nav */
-      --bg-2: #30363d;     /* subtle contrast */
-      --text-0: #e6edf3;   /* primary text */
-      --text-1: #c9d1d9;   /* secondary text */
-      --brand: #a5d6ff;    /* accent (links, highlights) */
-      --brand-2: #7fb7ff;  /* hover accent */
-      --muted: #8b949e;    
-      --border: #3b434b;   /* borders/separators */
-      --shadow: rgba(0,0,0,.35);
-      --radius-lg: 16px;
-      --radius-md: 12px;
-      --radius-sm: 10px;
-      --focus: 0 0 0 3px rgba(165,214,255,.35);
-      --speed-fast: 120ms;
-      --speed-med: 180ms;
-      --speed-slow: 240ms;
-    }
-
-    @media (prefers-color-scheme: light){
-      :root{
-        --bg-0: #f6f8fa;
-        --bg-1: #ffffff;
-        --bg-2: #eef1f4;
-        --text-0: #0f1419;
-        --text-1: #253242;
-        --brand: #245cff;
-        --brand-2: #1f4ee0;
-        --muted: #445566;
-        --border: #dde3ea;
-        --shadow: rgba(0,0,0,.08);
-      }
-    }
-
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; font-family:Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
-      color:var(--text-0); background:linear-gradient(180deg, var(--bg-0), var(--bg-2));
-    }
-
-    a{color:var(--brand); text-decoration:none}
-    a:hover{color:var(--brand-2)}
-
-    .container{max-width:1100px; margin:0 auto; padding:24px}
-
-    /* ===== Header / Nav ===== */
-    header{
-      position:sticky; top:0; z-index:20; backdrop-filter:saturate(120%) blur(6px);
-      background:color-mix(in srgb, var(--bg-1) 92%, transparent);
-      border-bottom:1px solid var(--border);
-    }
-    .nav{display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 24px}
-    .brand{display:flex; align-items:center; gap:12px; font-weight:700}
-    .brand .dot{width:12px; height:12px; border-radius:999px; background:var(--brand); box-shadow:0 0 0 6px color-mix(in srgb, var(--brand) 20%, transparent)}
-
-    .menu{display:flex; gap:10px; align-items:center}
-    .menu > li{list-style:none; position:relative}
-
-    /* top-level trigger buttons */
-    .menu button{
-      background:transparent; border:1px solid var(--border); color:var(--text-0);
-      padding:10px 14px; border-radius:999px; cursor:pointer; font-weight:600;
-      transition:transform var(--speed-fast), background var(--speed-fast), border-color var(--speed-fast);
-    }
-    .menu button:hover{background:var(--bg-2); border-color:color-mix(in srgb, var(--brand) 40%, var(--border))}
-    .menu button[aria-expanded="true"]{background:color-mix(in srgb, var(--brand) 8%, var(--bg-2)); border-color:var(--brand)}
-    .menu button:focus-visible{outline:none; box-shadow:var(--focus)}
-
-    /* dropdown panel */
-    .dropdown{position:absolute; left:0; top:calc(100% + 10px); width:320px; background:var(--bg-1);
-      border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:0 14px 34px var(--shadow);
-      padding:10px; opacity:0; visibility:hidden; transform:translateY(-4px) scale(.98);
-      transition:opacity var(--speed-med), transform var(--speed-med), visibility var(--speed-med);
-    }
-    .dropdown.open{opacity:1; visibility:visible; transform:translateY(0) scale(1)}
-
-    .dropdown a{
-      display:flex; align-items:start; gap:10px; padding:10px; border-radius:12px; color:var(--text-0);
-      border:1px solid transparent; transition:background var(--speed-fast), transform var(--speed-fast), border-color var(--speed-fast);
-    }
-    .dropdown a:hover{background:var(--bg-2); transform:translateX(2px); border-color:color-mix(in srgb, var(--brand) 20%, var(--border))}
-    .dropdown small{color:var(--muted)}
-
-    /* badges and pills */
-    .pill{display:inline-block; font-size:12px; padding:2px 8px; border-radius:999px; background:color-mix(in srgb, var(--brand) 18%, var(--bg-2)); color:var(--brand); border:1px solid color-mix(in srgb, var(--brand) 35%, var(--border))}
-
-    /* ===== Hero ===== */
-    .hero{padding:56px 24px 28px}
-    .hero .grid{display:grid; grid-template-columns:1.2fr 1fr; gap:22px; align-items:center}
-    .card{
-      background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius-lg); padding:22px;
-      box-shadow:0 8px 28px var(--shadow);
-    }
-    h1{font-size:40px; line-height:1.1; margin:0 0 10px}
-    p.lead{color:var(--text-1); font-size:18px}
-
-    .cta{display:flex; gap:12px; margin-top:18px}
-    .btn{
-      display:inline-flex; align-items:center; gap:8px; padding:12px 16px; border-radius:999px; border:1px solid var(--border);
-      background:linear-gradient(180deg, color-mix(in srgb, var(--brand) 10%, var(--bg-2)), var(--bg-2)); color:var(--text-0); font-weight:600; cursor:pointer;
-      transition:transform var(--speed-fast), box-shadow var(--speed-fast), border-color var(--speed-fast), background var(--speed-fast);
-    }
-    .btn:hover{transform:translateY(-1px); box-shadow:0 8px 18px var(--shadow); border-color:color-mix(in srgb, var(--brand) 35%, var(--border))}
-    .btn.secondary{background:var(--bg-2)}
-
-    /* ===== Content sections ===== */
-    section{padding:14px 24px 42px}
-    .section-title{font-size:24px; margin:0 0 10px}
-    .grid-3{display:grid; grid-template-columns:repeat(3, 1fr); gap:16px}
-    .tile{background:var(--bg-1); border:1px solid var(--border); border-radius:var(--radius-md); padding:16px; transition:transform var(--speed-fast)}
-    .tile:hover{transform:translateY(-2px)}
-
-    /* ===== Footer ===== */
-    footer{border-top:1px solid var(--border); padding:18px 24px; color:var(--muted)}
-
-    /* ===== Utility ===== */
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    .space-y-08 > * + *{margin-top:8px}
-
-    /* Responsive */
-    @media (max-width:900px){
-      .hero .grid{grid-template-columns:1fr}
-      .grid-3{grid-template-columns:1fr}
-      .dropdown{width:min(92vw, 320px)}
-    }
-  </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Homelab Landing Page</title>
+	<style>
+		:root {
+			--color1: #1B3A57;
+			--color2: #2C3E50;
+			--color3: #4A6E8D;
+			--color4: #A4C8E1;
+			--color5: #F0F0F0;
+		}
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+			background: var(--color5);
+			min-height: 100vh;
+			font-family: 'Segoe UI', Arial, sans-serif;
+			/* Paper feel */
+			background-color: var(--color5);
+			background-image: repeating-linear-gradient(135deg, #e9e9e9 0px, #e9e9e9 2px, transparent 2px, transparent 20px), repeating-linear-gradient(45deg, #e9e9e9 0px, #e9e9e9 2px, transparent 2px, transparent 20px);
+			box-sizing: border-box;
+		}
+		body {
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-start;
+		}
+		header {
+			width: 100%;
+			background: var(--color1);
+			color: var(--color5);
+			padding: 2rem 0 1rem 0;
+			text-align: center;
+			box-shadow: 0 2px 8px rgba(27,58,87,0.07);
+		}
+		nav {
+			width: 100%;
+			background: var(--color2);
+			display: flex;
+			justify-content: center;
+			box-shadow: 0 2px 8px rgba(27,58,87,0.07);
+			z-index: 10;
+		}
+		.navbar {
+			display: flex;
+			gap: 2rem;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+		.navbar > li {
+			position: relative;
+		}
+		.navbar > li > button {
+			background: var(--color3);
+			color: var(--color5);
+			border: none;
+			padding: 1rem 2rem;
+			font-size: 1rem;
+			border-radius: 0.5rem 0.5rem 0 0;
+			cursor: pointer;
+			transition: background 0.2s;
+			outline: none;
+			width: 100%;
+		}
+		.navbar > li > button:hover, .navbar > li > button:focus {
+			background: var(--color4);
+			color: var(--color1);
+		}
+		.dropdown {
+			display: none;
+			position: absolute;
+			left: 0;
+			top: 100%;
+			background: var(--color5);
+			min-width: 220px;
+			box-shadow: 0 4px 16px rgba(27,58,87,0.10);
+			border-radius: 0 0 0.5rem 0.5rem;
+			z-index: 100;
+			padding: 0.5rem 0;
+			animation: fadeIn 0.2s;
+		}
+		.dropdown li {
+			list-style: none;
+		}
+		.dropdown li a {
+			display: block;
+			color: var(--color1);
+			text-decoration: none;
+			padding: 0.75rem 1.5rem;
+			font-size: 1rem;
+			transition: background 0.2s, color 0.2s;
+			border-radius: 0.25rem;
+		}
+		.dropdown li a:hover, .dropdown li a:focus {
+			background: var(--color4);
+			color: var(--color2);
+		}
+		.navbar > li:focus-within > .dropdown,
+		.navbar > li:hover > .dropdown {
+			display: block;
+		}
+		@keyframes fadeIn {
+			from { opacity: 0; }
+			to { opacity: 1; }
+		}
+		main {
+			width: 100%;
+			max-width: 900px;
+			background: rgba(255,255,255,0.95);
+			margin: 2rem auto 0 auto;
+			padding: 2rem;
+			border-radius: 1rem;
+			box-shadow: 0 2px 8px rgba(27,58,87,0.07);
+		}
+		.readme {
+			color: var(--color1);
+			font-size: 1.1rem;
+			line-height: 1.7;
+			margin-bottom: 2rem;
+		}
+		@media (max-width: 700px) {
+			.navbar {
+				flex-direction: column;
+				gap: 0.5rem;
+				align-items: stretch;
+			}
+			.navbar > li > button {
+				width: 100%;
+				padding: 1rem;
+			}
+			main {
+				padding: 1rem;
+			}
+		}
+	</style>
 </head>
 <body>
-  <header>
-    <nav class="nav" aria-label="Main">
-      <div class="brand" aria-label="Site home">
-        <span class="dot" aria-hidden="true"></span>
-        <a href="#" class="logo">DevOps Homelab</a>
-      </div>
-
-      <ul class="menu" role="menubar" aria-label="Primary navigation">
-        <!-- Projects -->
-        <li>
-          <button class="menu-trigger" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-controls="menu-projects">Projects</button>
-          <div id="menu-projects" class="dropdown" role="menu" aria-label="Projects">
-            <a href="#projects" role="menuitem">
-              <div>
-                <strong>Pi‑hole + Unbound</strong>
-                <div><small>Recursive DNS + network‑wide ad‑blocking</small></div>
-              </div>
-              <span class="pill">Guide</span>
-            </a>
-            <a href="#projects" role="menuitem">
-              <div>
-                <strong>Proxmox + Arch Linux Lab</strong>
-                <div><small>VMs, snapshots, IaC experiments</small></div>
-              </div>
-              <span class="pill">Lab</span>
-            </a>
-            <a href="#projects" role="menuitem">
-              <div>
-                <strong>WireGuard Remote Access</strong>
-                <div><small>Zero‑trust remote entry into the homelab</small></div>
-              </div>
-              <span class="pill">VPN</span>
-            </a>
-          </div>
-        </li>
-
-        <!-- Gear -->
-        <li>
-          <button class="menu-trigger" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-controls="menu-gear">Gear</button>
-          <div id="menu-gear" class="dropdown" role="menu" aria-label="Gear">
-            <a href="#gear" role="menuitem"><div><strong>Network</strong><div><small>Cisco CBS220‑8T‑E‑2G, FortiGate 100E, Omada Controller</small></div></div><span class="pill">Switch/Firewall</span></a>
-            <a href="#gear" role="menuitem"><div><strong>PCs</strong><div><small>HP EliteDesk 800 G2 DM, Dell D13S</small></div></div><span class="pill">Nodes</span></a>
-            <a href="#gear" role="menuitem"><div><strong>Single‑Board</strong><div><small>Raspberry Pi 4 (4GB) — Pi‑hole/Unbound</small></div></div><span class="pill">RPi</span></a>
-            <a href="#gear" role="menuitem"><div><strong>Daily Driver</strong><div><small>Desktop for docs, code, and builds</small></div></div><span class="pill">Workstation</span></a>
-          </div>
-        </li>
-
-        <!-- Resources -->
-        <li>
-          <button class="menu-trigger" role="menuitem" aria-haspopup="true" aria-expanded="false" aria-controls="menu-resources">Resources</button>
-          <div id="menu-resources" class="dropdown" role="menu" aria-label="Resources">
-            <a href="https://github.com/" target="_blank" rel="noopener" role="menuitem">
-              <div><strong>My GitHub</strong><div><small>Repos, issues, and roadmaps</small></div></div>
-              <span class="pill">External</span>
-            </a>
-            <a href="#blog" role="menuitem">
-              <div><strong>Blog</strong><div><small>Write‑ups & fixes from the lab</small></div></div>
-              <span class="pill">Posts</span>
-            </a>
-            <a href="#resources" role="menuitem">
-              <div><strong>Learning</strong><div><small>Docs, cheatsheets, and references</small></div></div>
-              <span class="pill">Docs</span>
-            </a>
-          </div>
-        </li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <!-- Hero -->
-    <section class="hero container">
-      <div class="grid">
-        <div class="card">
-          <h1>Homelab → DevOps Journey</h1>
-          <p class="lead">I document real builds, breakages, and fixes—from Pi‑hole + Unbound to Proxmox, Arch, and WireGuard. The goal: grow from homelab tinkerer to production‑ready DevOps engineer.</p>
-          <div class="cta">
-            <a class="btn" href="#projects" aria-label="Jump to projects">Explore Projects</a>
-            <a class="btn secondary" href="#blog" aria-label="Go to blog">Read the Blog</a>
-          </div>
-        </div>
-        <div class="card">
-          <div class="space-y-08">
-            <div><strong>Theme & Consistency</strong><div class="muted">All pages use the same typography, palette, and interactive buttons.</div></div>
-            <div><strong>Accessible Navigation</strong><div class="muted">Dropdowns support keyboard, hover‑intent, and single‑menu open at a time.</div></div>
-            <div><strong>Modular Content</strong><div class="muted">Add new projects, gear, and resources without changing the layout.</div></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Projects preview -->
-    <section id="projects" class="container">
-      <h2 class="section-title">Featured Projects</h2>
-      <div class="grid-3">
-        <article class="tile">
-          <h3>Pi‑hole + Unbound</h3>
-          <p class="muted">Recursive DNS + network‑wide ad‑blocking on Raspberry Pi 4. Includes tuning, logs, and troubleshooting.</p>
-          <a class="btn" href="#">Read the guide</a>
-        </article>
-        <article class="tile">
-          <h3>Proxmox + Arch Lab</h3>
-          <p class="muted">Arch VM templates, cloud‑init, and snapshot strategies. Automate lab resets for repeatable tests.</p>
-          <a class="btn" href="#">View setup</a>
-        </article>
-        <article class="tile">
-          <h3>WireGuard Remote Access</h3>
-          <p class="muted">Secure inbound access with proper routing & firewall rules. Includes mobile and desktop clients.</p>
-          <a class="btn" href="#">See config</a>
-        </article>
-      </div>
-    </section>
-
-    <!-- Gear preview -->
-    <section id="gear" class="container">
-      <h2 class="section-title">Homelab Gear</h2>
-      <div class="grid-3">
-        <article class="tile"><h3>Network</h3><p class="muted">Cisco CBS220‑8T‑E‑2G, FortiGate 100E (v6.4.11), Omada Controller for guest Wi‑Fi.</p></article>
-        <article class="tile"><h3>PCs</h3><p class="muted">HP EliteDesk 800 G2 DM (i5‑6600T/8GB/224GB SSD), Dell D13S; Intel HD Graphics.</p></article>
-        <article class="tile"><h3>Raspberry Pi</h3><p class="muted">Raspberry Pi 4 (4GB, 32GB SD), running Pi‑hole with Unbound DNS + DuckDNS.</p></article>
-      </div>
-    </section>
-
-    <!-- Resources preview -->
-    <section id="resources" class="container">
-      <h2 class="section-title">Resources</h2>
-      <div class="grid-3">
-        <article class="tile"><h3>GitHub Profile</h3><p class="muted">Track code changes, open issues, and roadmap.</p><a class="btn" href="https://github.com/" target="_blank" rel="noopener">Open GitHub</a></article>
-        <article class="tile"><h3>Blog</h3><p class="muted">Write‑ups, fixes, and notes from the lab—Pi‑hole, Proxmox, WireGuard.</p><a class="btn" href="#">Go to Blog</a></article>
-        <article class="tile"><h3>Cheatsheets</h3><p class="muted">Handy snippets for systemd, iptables/nftables, and Proxmox.</p><a class="btn" href="#">Browse</a></article>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">© <span id="year"></span> DevOps Homelab • All content under same theme & interactions</div>
-  </footer>
-
-  <script>
-    // ===== Dropdowns with hover intent & single-open behavior =====
-    // Requirements met:
-    // 1) Buttons become interactive on hover long enough to click (open delay)
-    // 2) Only one dropdown open at a time
-    // 3) Menus persist while hovered long enough to select items
-    // 4) Keyboard accessible & ESC to close
-
-    (function(){
-      const triggers = Array.from(document.querySelectorAll('.menu-trigger'));
-      const menus = triggers.map(btn => document.getElementById(btn.getAttribute('aria-controls')));
-      let openIdx = -1;          // index of the currently open menu
-      let timers = new Map();    // per-trigger open/close timers
-
-      const OPEN_DELAY = 180;    // ms: hover intent to open
-      const CLOSE_DELAY = 240;   // ms: delay so users can move into menu
-
-      function closeAll(except = -1){
-        menus.forEach((menu, i) => {
-          if(i !== except){
-            menu.classList.remove('open');
-            triggers[i].setAttribute('aria-expanded', 'false');
-          }
-        });
-      }
-
-      function openMenu(i){
-        if(openIdx !== i){
-          closeAll(i);
-          menus[i].classList.add('open');
-          triggers[i].setAttribute('aria-expanded', 'true');
-          openIdx = i;
-        }
-      }
-
-      function schedule(id, fn, delay){
-        clearTimeout(timers.get(id));
-        const t = setTimeout(fn, delay);
-        timers.set(id, t);
-      }
-
-      triggers.forEach((btn, i) => {
-        const menu = menus[i];
-
-        // Hover intent open
-        btn.addEventListener('mouseenter', () => schedule('open-'+i, () => openMenu(i), OPEN_DELAY));
-        // Focus open (keyboard)
-        btn.addEventListener('focus', () => openMenu(i));
-
-        // Close when leaving button if not entering menu soon
-        btn.addEventListener('mouseleave', () => schedule('close-'+i, () => {
-          // Only close if not hovering menu
-          if(!menu.matches(':hover')){
-            menu.classList.remove('open');
-            btn.setAttribute('aria-expanded','false');
-            if(openIdx === i) openIdx = -1;
-          }
-        }, CLOSE_DELAY));
-
-        // Click toggles (also supports touch)
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          const isOpen = menu.classList.contains('open');
-          if(isOpen){
-            menu.classList.remove('open');
-            btn.setAttribute('aria-expanded','false');
-            openIdx = -1;
-          } else {
-            openMenu(i);
-          }
-        });
-
-        // Keep open while hovering the menu
-        menu.addEventListener('mouseenter', () => {
-          clearTimeout(timers.get('close-'+i));
-        });
-        menu.addEventListener('mouseleave', () => schedule('close-'+i, () => {
-          menu.classList.remove('open');
-          btn.setAttribute('aria-expanded','false');
-          if(openIdx === i) openIdx = -1;
-        }, CLOSE_DELAY));
-      });
-
-      // Global ESC close
-      document.addEventListener('keydown', (e) => {
-        if(e.key === 'Escape'){
-          closeAll();
-          openIdx = -1;
-        }
-        // Arrow navigation between top-level triggers
-        if(['ArrowRight','ArrowLeft'].includes(e.key)){
-          const focused = document.activeElement;
-          const idx = triggers.indexOf(focused);
-          if(idx > -1){
-            const next = (e.key === 'ArrowRight') ? (idx+1) % triggers.length : (idx-1+triggers.length) % triggers.length;
-            triggers[next].focus();
-          }
-        }
-      });
-
-      // Current year in footer
-      document.getElementById('year').textContent = new Date().getFullYear();
-    })();
-  </script>
+	<header>
+		<h1>Homelab</h1>
+		<p>Welcome to my Homelab GitHub site!</p>
+	</header>
+	<nav>
+		<ul class="navbar">
+			<li tabindex="0">
+				<button type="button" aria-haspopup="true" aria-expanded="false">Gear</button>
+				<ul class="dropdown" aria-label="Gear submenu">
+					<li><a href="#">Desktop PC</a></li>
+					<li><a href="#">Homelab PCs</a></li>
+					<li><a href="#">Raspberry Pi</a></li>
+					<li><a href="#">Switch</a></li>
+					<li><a href="#">Router</a></li>
+				</ul>
+			</li>
+			<li tabindex="0">
+				<button type="button" aria-haspopup="true" aria-expanded="false">Projects</button>
+				<ul class="dropdown" aria-label="Projects submenu">
+					<li><a href="#">Pi-hole with Unbound</a></li>
+					<li><a href="#">Proxmox</a></li>
+				</ul>
+			</li>
+			<li tabindex="0">
+				<button type="button" aria-haspopup="true" aria-expanded="false">Resources</button>
+				<ul class="dropdown" aria-label="Resources submenu">
+					<li><a href="#">GitHub Page</a></li>
+					<li><a href="#">Personal Blog</a></li>
+				</ul>
+			</li>
+		</ul>
+	</nav>
+	<main>
+		<section class="readme">
+			<h2>README</h2>
+			<p>This is the landing page for my Homelab. Here you can find information about my hardware, projects, and useful resources. Use the navigation above to explore more!</p>
+		</section>
+	</main>
+	<script>
+		// Dropdown accessibility: open on hover and focus, close on mouseleave/blur
+		document.querySelectorAll('.navbar > li').forEach(function(item) {
+			let timeout;
+			const btn = item.querySelector('button');
+			const dropdown = item.querySelector('.dropdown');
+			btn.addEventListener('mouseenter', function() {
+				clearTimeout(timeout);
+				btn.setAttribute('aria-expanded', 'true');
+				dropdown.style.display = 'block';
+			});
+			btn.addEventListener('mouseleave', function() {
+				timeout = setTimeout(function() {
+					btn.setAttribute('aria-expanded', 'false');
+					dropdown.style.display = '';
+				}, 250);
+			});
+			dropdown.addEventListener('mouseenter', function() {
+				clearTimeout(timeout);
+				btn.setAttribute('aria-expanded', 'true');
+				dropdown.style.display = 'block';
+			});
+			dropdown.addEventListener('mouseleave', function() {
+				timeout = setTimeout(function() {
+					btn.setAttribute('aria-expanded', 'false');
+					dropdown.style.display = '';
+				}, 250);
+			});
+			btn.addEventListener('focus', function() {
+				btn.setAttribute('aria-expanded', 'true');
+				dropdown.style.display = 'block';
+			});
+			btn.addEventListener('blur', function() {
+				timeout = setTimeout(function() {
+					btn.setAttribute('aria-expanded', 'false');
+					dropdown.style.display = '';
+				}, 250);
+			});
+		});
+		// Close all dropdowns on click outside
+		document.addEventListener('click', function(e) {
+			if (!e.target.closest('nav')) {
+				document.querySelectorAll('.navbar > li > button').forEach(btn => btn.setAttribute('aria-expanded', 'false'));
+				document.querySelectorAll('.dropdown').forEach(drop => drop.style.display = '');
+			}
+		});
+	</script>
 </body>
 </html>
