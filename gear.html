@@ -27,7 +27,9 @@
     --menu-item-pad-x: 12px;
     --menu-radius: 10px;
   }
+
   @media (prefers-reduced-motion: no-preference){ :root{ scroll-behavior: smooth; } }
+
   html,body{height:100%}
   body{
     margin:0;
@@ -38,7 +40,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
   .wrap{max-width: 1000px; margin: 0 auto; padding: 32px 16px;}
+
   header{
     position: sticky; top:0; z-index:20;
     backdrop-filter: blur(6px);
@@ -97,6 +101,7 @@
     outline-offset: 2px;
     border-radius: 6px;
   }
+
   .paper{
     background: var(--surface);
     border: 1px solid var(--border);
@@ -104,19 +109,41 @@
     box-shadow: var(--shadow);
     padding: 28px;
   }
+
+  /* Headings — keep all main sections consistent */
   h1{margin: 0 0 8px 0; font-size: clamp(26px, 4vw, 34px)}
-  h2{margin-top: 26px; font-size: 20px; border-bottom: 1px solid var(--border); padding-bottom:6px; color: var(--accent)}
+  h2{
+    margin-top: 26px;
+    font-size: 20px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom:6px;
+    color: var(--accent);
+  }
+
   p{line-height:1.7}
   ul{line-height:1.7}
+
+  /* Simple key-value table styling (Services) */
+  table.kv{ width:100%; border-collapse: collapse; margin-top:.5rem; }
+  table.kv th, table.kv td{ padding:8px 10px; border-bottom:1px dashed var(--border); text-align:left; }
+  table.kv th{ color:var(--accent); font-weight:700; }
+
   .badge{display:inline-block; padding:2px 8px; border-radius:999px; background: var(--primary-10); color: var(--primary); border:1px solid color-mix(in oklab, var(--primary) 35%, #000 65%)}
   footer{border-top:1px solid var(--border); color: var(--muted); font-size:14px; padding:18px 0; margin-top:32px}
 
-  /* Prevent sticky header from covering anchors */
-  h1[id], h2[id], h3[id], h4[id], h5[id]{ scroll-margin-top: 90px; }
+  /* prevent sticky header from covering anchors */
+  h1[id], h2[id], h3[id]{ scroll-margin-top: 90px; }
 
-  @media (prefers-reduced-motion: reduce){
-    *{animation: none !important; transition: none !important}
+  /* Back-to-top button */
+  #toTop{
+    position: fixed; right: 24px; bottom: 24px;
+    background: var(--surface); color: var(--text);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: .55rem .9rem; line-height:1; cursor: pointer;
+    box-shadow: var(--shadow);
+    opacity: 0; pointer-events: none; transition: opacity .2s ease;
   }
+  #toTop.show{ opacity: 1; pointer-events: auto; }
   </style>
 </head>
 <body>
@@ -127,7 +154,7 @@
         <div class="tag">DevOps Journey · Homelab · Cloud</div>
       </div>
 
-      <!-- Dropdown now links to in-page sections -->
+      <!-- Gear menu now links to in-page sections -->
       <nav class="menus">
         <details>
           <summary>Gear</summary>
@@ -182,14 +209,14 @@
       </ul>
       <hr>
 
-      <h3 id="compute">Compute</h3>
+      <h2 id="compute">Compute</h2>
       <ul>
         <li><strong>HP EliteDesk 800 G2 DM:</strong> i5-6600T, 8GB RAM, 224GB SSD, Intel HD Graphics</li>
         <li><strong>Dell D13S:</strong> i3-8100T, 8GB RAM, 224GB SSD, Intel HD Graphics</li>
       </ul>
       <hr>
 
-      <h4 id="daily-desktop-gaming-workstation">Daily Desktop (Gaming / Workstation)</h4>
+      <h2 id="daily-desktop-gaming-workstation">Daily Desktop (Gaming / Workstation)</h2>
       <ul>
         <li><strong>CPU:</strong> i5-13600K (14-Core, up to 5.10GHz)</li>
         <li><strong>Motherboard:</strong> ASUS TUF Gaming Z790-Pro WiFi (DDR5)</li>
@@ -202,20 +229,35 @@
       </ul>
       <hr>
 
-      <h5 id="services">Services</h5>
-      <ul>
-        <li><strong>Raspberry Pi (DNS + VPN):</strong> VLAN 10 (untagged) + tagged access to 20/30/40/50/60, Services: Pi-hole + Unbound DNS, VPN gateway</li>
-      </ul>
+      <h2 id="services">Services</h2>
+      <table class="kv">
+        <thead>
+          <tr><th>Service</th><th>VLAN(s)</th><th>Role</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Pi-hole + Unbound DNS</td>
+            <td>10 (untagged) + tagged 20/30/40/50/60</td>
+            <td>Recursive DNS (validating), network-wide ad blocking</td>
+          </tr>
+          <tr>
+            <td>VPN Gateway</td>
+            <td>10</td>
+            <td>Remote access to homelab</td>
+          </tr>
+        </tbody>
+      </table>
     </section>
   </main>
 
-  <button id="toTop" aria-label="Back to top">↑ Top</button>
+  <button id="toTop" aria-label="Back to top" title="Back to top">↑ Top</button>
 
   <script>
   (function(){
     const menus = document.querySelector('nav.menus');
     if (!menus) return;
     const items = Array.from(menus.querySelectorAll('details'));
+
     function closeAll(except){
       items.forEach(d => { if (d !== except) d.removeAttribute('open'); });
     }
@@ -230,11 +272,29 @@
       if (e.key === 'Escape') closeAll();
     });
 
-    // close dropdown after clicking an in-page anchor link
+    // Close dropdown after clicking an in-page anchor
     menus.addEventListener('click', (e) => {
       const a = e.target.closest('a[href^="#"]');
       if (!a) return;
       menus.querySelectorAll('details[open]').forEach(d => d.removeAttribute('open'));
+    });
+
+    // Back-to-top button behavior
+    const toTop = document.getElementById('toTop');
+    const showAfter = 300; // px
+    const onScroll = () => {
+      if (window.scrollY > showAfter) {
+        toTop.classList.add('show');
+      } else {
+        toTop.classList.remove('show');
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+
+    toTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      closeAll(); // also close any open menu
     });
   })();
   </script>
