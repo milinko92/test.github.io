@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pi-hole + Unbound DNS · Kubernix</title>
+  <link rel="stylesheet" href="style.css?v=2" />
+</head>
+<body>
+  <header>
+    <div class="wrap bar">
+      <div>
+        <div class="brand">Kubernix</div>
+        <div class="tag">DevOps Journey · Homelab · Cloud</div>
+      </div>
+      <nav aria-label="Primary">
+        <div class="menus">
+          <details open>
+            <summary>Projects</summary>
+            <ul>
+              <li><a href="pihole.html" class="active">Pi-hole + Unbound DNS</a></li>
+              <li><a href="proxmox.html">Proxmox + Arch VM</a></li>
+              <li><a href="automation.html">Bash/PowerShell Automation</a></li>
+              <li><a href="aws.html">AWS Foundations</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>Labs</summary>
+            <ul>
+              <li><a href="networking.html">Networking Scenarios</a></li>
+              <li><a href="observability.html">Logs & Monitoring</a></li>
+              <li><a href="ci.html">CI/CD Experiments</a></li>
+            </ul>
+          </details>
+          <details>
+            <summary>Resources</summary>
+            <ul>
+              <li><a href="https://kubernix.com" target="_blank" rel="noopener">GitHub Page</a></li>
+              <li><a href="https://blog.kubernix.com" target="_blank" rel="noopener">Personal Blog</a></li>
+              <li><a href="roadmap.html">Learning Roadmap</a></li>
+            </ul>
+          </details>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <article class="paper">
+      <aside class="infobox">
+        <h3>Pi-hole + Unbound DNS</h3>
+        <table>
+          <tr><td>Type</td><td>Project</td></tr>
+          <tr><td>Focus</td><td>Ad-blocking, recursive DNS</td></tr>
+          <tr><td>Status</td><td>Completed / Documented</td></tr>
+        </table>
+      </aside>
+      <h1>Pi-hole + Unbound DNS</h1>
+      <p>This project documents the installation and configuration of Pi-hole on a Raspberry Pi 4, combined with Unbound for local recursive DNS resolution. The setup provides privacy, improved DNS performance, and ad-blocking across the network.</p>
+      <p><em>Full tutorial and config snippets will be added here.</em></p>
+    </article>
+  </main>
+
+  <footer>
+    <div class="wrap" style="padding:0">
+      <span>© 2025 Kubernix · <a href="https://kubernix.com">kubernix.com</a> · <a href="https://blog.kubernix.com">blog.kubernix.com</a></span>
+    </div>
+  </footer>
+
+  <script>
+    (function(){
+      const nav = document.querySelector('nav');
+      if(!nav) return;
+      const all = () => Array.from(nav.querySelectorAll('details'));
+      const closeAll = (except) => { all().forEach(d => { if (d !== except && d.hasAttribute('open')) d.removeAttribute('open'); }); };
+      all().forEach(d => { d.addEventListener('toggle', () => { if (d.open) closeAll(d); }); });
+      document.addEventListener('click', (e) => { if (!e.target.closest('nav')) closeAll(); });
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+    })();
+  </script>
+</body>
+</html>
