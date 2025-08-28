@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Proxmox</title>
+  <title>Proxmox + Arch VM · Kubernix</title>
   <link rel="stylesheet" href="style.css">
 <style>
 	:root {
@@ -123,6 +123,7 @@
   <header>
     <div class="wrap bar">
       <div>
+        <div class="brand">Proxmox + Arch VM</div>
         <div class="tag">Proxmox virtualization and Arch Linux VM setup.</div>
       </div>
       <nav class="menus">
@@ -156,134 +157,8 @@
   
   <main class="wrap">
     <section class="paper">
-      <h2>Proxmox/h2>
-          <section id="requirements">
-      <h2>Requirements</h2>
-      <div class="grid-2">
-        <div>
-          <h3>You’ll need</h3>
-          <ul>
-            <li>Proxmox VE host (latest stable recommended)</li>
-            <li>Arch Linux ISO (download from a mirror)</li>
-            <li>Network connectivity and a storage pool (local-lvm or directory)</li>
-          </ul>
-        </div>
-        <div>
-          <h3>Recommendations</h3>
-          <ul>
-            <li>Use <em>VirtIO</em> for disk &amp; NIC for performance.</li>
-            <li>Enable <em>Q35 + OVMF (UEFI)</em> for modern firmware support.</li>
-            <li>Prefer <em>Cloud-Init</em> if you want to automate first-boot config.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <section id="prepare-proxmox">
-      <h2>Prepare Proxmox</h2>
-      <ol>
-        <li><strong>Upload ISO:</strong> In Proxmox UI → <em>Datacenter &gt; Storage</em> → pick ISO storage (e.g., <code>local</code>) → <em>ISO Images</em> → <em>Upload</em> → select Arch ISO.</li>
-        <li><strong>Create a Linux Bridge</strong> (if you don’t already): <em>Datacenter &gt; Node &gt; System &gt; Network</em> → add <code>linux bridge</code> attached to your NIC (e.g., <code>vmbr0</code>).</li>
-      </ol>
-    </section>
-
-    <section id="create-vm">
-      <h2>Create the VM</h2>
-      <ol>
-        <li><strong>Create VM</strong>:
-          <ul>
-            <li><em>General:</em> Node = your host, ISO = Arch ISO.</li>
-            <li><em>System:</em> Machine = Q35, BIOS = OVMF (UEFI), SCSI Controller = VirtIO SCSI (single).</li>
-            <li><em>Disks:</em> Bus/Device = VirtIO Block, Size = e.g. 32–64&nbsp;GB.</li>
-            <li><em>CPU:</em> 2–4 cores (host type), <em>Memory:</em> 2–4&nbsp;GB to start.</li>
-            <li><em>Network:</em> Model = VirtIO (paravirtualized), Bridge = vmbr0.</li>
-          </ul>
-        </li>
-        <li><strong>Start</strong> the VM and open the <em>Console</em>.</li>
-      </ol>
-    </section>
-
-    <section id="install-arch">
-      <h2>Install Arch Linux</h2>
-      <p>At the Arch live prompt, consider this streamlined approach (adapt as needed):</p>
-<pre><code># Sync clock
-timedatectl set-ntp true
-
-# Partition (single disk example: /dev/vda)
-# Use cfdisk or parted to create: EFI (512M, type ef00) + root (rest)
-cfdisk /dev/vda
-
-# Format
-mkfs.fat -F32 /dev/vda1
-mkfs.ext4 /dev/vda2
-
-# Mount
-mount /dev/vda2 /mnt
-mkdir -p /mnt/boot
-mount /dev/vda1 /mnt/boot
-
-# Base install
-pacstrap -K /mnt base linux linux-firmware vim networkmanager
-
-# Fstab
-genfstab -U /mnt &gt;&gt; /mnt/etc/fstab
-
-# Chroot
-arch-chroot /mnt
-
-# Locale, time, hostname
-ln -sf /usr/share/zoneinfo/Europe/Belgrade /etc/localtime
-hwclock --systohc
-sed -i 's/^#en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen
-locale-gen
-echo 'LANG=en_US.UTF-8' &gt; /etc/locale.conf
-echo 'arch-vm' &gt; /etc/hostname
-
-# Networking
-systemctl enable NetworkManager
-
-# Bootloader (systemd-boot with UEFI)
-bootctl install
-cat &gt; /boot/loader/loader.conf &lt;&lt;EOF
-default arch
-timeout 3
-editor 0
-EOF
-cat &gt; /boot/loader/entries/arch.conf &lt;&lt;EOF
-title   Arch Linux
-linux   /vmlinuz-linux
-initrd  /initramfs-linux.img
-options root=PARTUUID=$(blkid -s PARTUUID -o value /dev/vda2) rw
-EOF
-
-# Root password
-passwd
-
-exit
-umount -R /mnt
-reboot
-</code></pre>
-      <p>After reboot, log in as <code>root</code> and create a regular user.</p>
-    </section>
-
-    <section id="post-install">
-      <h2>Post‑install</h2>
-      <ul>
-        <li>Install QEMU guest tools: <code>pacman -S qemu-guest-agent</code> and <code>systemctl enable --now qemu-guest-agent</code>.</li>
-        <li>Update packages: <code>pacman -Syu</code>.</li>
-        <li>SSH: <code>pacman -S openssh &amp;&amp; systemctl enable --now sshd</code>.</li>
-        <li>Optional: set static IP in NetworkManager or reserve DHCP on your router/firewall.</li>
-      </ul>
-    </section>
-
-    <section id="troubleshooting">
-      <h2>Troubleshooting</h2>
-      <ul>
-        <li><strong>No boot after install:</strong> Ensure BIOS = OVMF (UEFI) and the EFI partition is mounted at <code>/boot</code> for systemd‑boot.</li>
-        <li><strong>No network:</strong> NIC model must be <em>VirtIO</em>; inside Arch, verify <code>nmcli device</code> and service status of NetworkManager.</li>
-        <li><strong>Clock drift:</strong> Confirm host time sync and inside guest run <code>timedatectl status</code>.</li>
-      </ul>
-    </section>
+      <h2>Proxmox + Arch VM</h2>
+      <p>(Content coming soon...)</p>
     </section>
   </main>
 
