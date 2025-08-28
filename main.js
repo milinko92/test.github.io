@@ -9,7 +9,7 @@
     <details data-menu="home">
       <summary>Home</summary>
       <ul>
-        <li><a href="index.html">Index</a></li>
+        <li><a href="index.html">Landing page</a></li>
       </ul>
     </details>
 
