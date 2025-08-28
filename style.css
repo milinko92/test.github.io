@@ -100,3 +100,33 @@ body {
 h1, h2, h3 {
   color: #a5d6ff;
 }
+
+/* ===== Card Sections (Squared) — opt‑in, non-breaking =====
+   Use by adding class="paper" to a section/div, and wrap the page content
+   in <main class="wrap"> to center and pad content. This block doesn't
+   change existing elements/styles anywhere else. */
+.wrap {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 16px;
+}
+
+.paper {
+  background: #24292f;          /* matches navbar surface */
+  border: 1px solid #444c56;     /* subtle border used in menus */
+  border-radius: 0;              /* squared corners */
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  padding: 24px;
+}
+
+/* Optional: place multiple cards in a responsive grid */
+.section-grid { display: grid; gap: 16px; }
+@media (min-width: 900px) { .section-grid.cols-2 { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1200px){ .section-grid.cols-3 { grid-template-columns: repeat(3,1fr); } }
+
+/* Optional: card header underline */
+.paper > h2, .paper > h3 {
+  margin-top: 0;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #444c56;
+}
