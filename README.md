@@ -1,0 +1,60 @@
+# Journeyto DevOps · Kubernix
+
+[![Website](https://img.shields.io/badge/website-kubernix.com-007fff?style=flat&logo=githubpages&logoColor=white)](https://kubernix.com)
+[![Blog](https://img.shields.io/badge/blog-blog.kubernix.com-007fff?style=flat&logo=hashnode&logoColor=white)](https://blog.kubernix.com)
+
+**Journey to DevOps** is a personal learning path and open lab by **Kubernix**.  
+It documents the journey into DevOps through Linux, networking, cloud, security, automation, and homelab projects.  
+
+---
+
+## 📖 Background
+
+This repo is not just a dump of code but also a journey log: configs, experiments, and lessons learnt along the way.
+It is also a personal knowledge base and a public guide for others taking the same journey.
+---
+
+## 🎯 Objectives
+
+- Master Linux, networking, and security fundamentals.
+- Set up a homelab for safe practice and experimentation.
+- Practice AWS Cloud Practitioner, then proceed to automation & scripting.
+- Deep dive into Docker, Kubernetes, Terraform, Ansible, and CI/CD.
+- Share progress publicly through blog and GitHub.
+
+---
+
+## 🗂️ Projects
+
+- 🛡️ [Pi-hole + Unbound DNS](https://kubernix.com/pihole.html)  
+- 🖥️ [Proxmox + Arch Linux VM](https://kubernix.com/proxmox.html)  
+- ⚙️ [Bash / PowerShell Automation](https://kubernix.com/automation.html)  
+- ☁️ [AWS Foundations](https://kubernix.com/aws.html)  
+
+More labs and configs will be added as the journey continues.
+
+---
+
+## 📅 Roadmap
+
+- **Phase 1** → LPIC-1, AWS Cloud Practitioner, homelab basics  
+- **Phase 2** → Network+/Security+, automation & monitoring  
+- **Phase 3** → Containers (Docker, Kubernetes), Terraform/Ansible, CI/CD pipelines  
+
+---
+
+## 🌐 Links
+
+- 🔗 **GitHub Pages** → [kubernix.com](https://kubernix.com)  
+- 📝 **Blog** → [blog.kubernix.com](https://blog.kubernix.com)  
+
+---
+
+## 📜 License
+
+Unless otherwise stated, projects are released under the **MIT License**.  
+Check individual folders for overrides.
+
+---
+
+_“Sharing knowledge, one lab at a time.”_ ✨
