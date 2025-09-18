@@ -1,7 +1,12 @@
 export type Post = {
-  id: string; title: string; brief: string; url: string;
-  publishedAt: string; coverImage?: { url: string } | null;
+  id: string;
+  title: string;
+  brief: string;
+  url: string;
+  publishedAt: string;
+  coverImage?: { url: string } | null;
 };
+
 const HASHNODE_GQL = 'https://gql.hashnode.com';
 
 export async function fetchPosts(host: string, first = 12): Promise<Post[]> {
@@ -17,8 +22,12 @@ export async function fetchPosts(host: string, first = 12): Promise<Post[]> {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ query, variables: { host, first } }),
-    next: { revalidate: 60 },
+    next: { revalidate: 60 }
   });
+  if (!res.ok) {
+    throw new Error(`Hashnode request failed: ${res.status}`);
+  }
   const json = await res.json();
-  return json?.data?.publication?.posts?.edges?.map((e: any) => e.node) ?? [];
+  const edges = json?.data?.publication?.posts?.edges ?? [];
+  return edges.map((e: any) => e.node);
 }
