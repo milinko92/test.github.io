@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-dark:#001b2e; --brand-mid:#1d3f58; --brand-accent:#537692;
+  --brand-light:#b3cde4; --brand-bg:#eef3f9;
+}
+html, body { height: 100%; }
+body {
+  background: var(--brand-dark);
+  color: var(--brand-bg);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+    "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+}
+.card { @apply rounded-2xl bg-brand-mid p-6 shadow-soft; }
+.card-title { @apply text-2xl font-semibold text-brand-bg; }
+.card-subtle { @apply text-brand-light/90; }
+.btn-link { @apply inline-block font-medium text-brand-light hover:text-brand-bg transition; }
