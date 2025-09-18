@@ -10,13 +10,13 @@ const config: Config = {
           mid: '#1d3f58',
           accent: '#537692',
           light: '#b3cde4',
-          bg: '#eef3f9',
-        },
+          bg: '#eef3f9'
+        }
       },
       borderRadius: { '2xl': '1rem' },
-      boxShadow: { soft: '0 6px 30px rgba(0,0,0,0.15)' },
-    },
+      boxShadow: { soft: '0 6px 30px rgba(0,0,0,0.15)' }
+    }
   },
-  plugins: [],
+  plugins: []
 };
 export default config;
